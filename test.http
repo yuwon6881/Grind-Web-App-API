@@ -1,0 +1,38 @@
+post http://localhost:8000/user
+Content-Type: application/json
+
+{
+    "name": "testUser2",
+    "email": "testUser2@example.com",
+    "password": "test123"
+}
+
+###
+post http://localhost:8000/signIn
+Content-Type: application/json
+
+{
+    "email": "testUser2@example.com",
+    "password": "test123"
+}
+
+###
+get http://localhost:8000/
+
+###
+get http://localhost:8000/api/folders
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU1ZTRkNjcxLThhNjgtNGU1Zi1hN2ZjLWUxM2Y3ODVkNWNjMCIsImVtYWlsIjoidGVzdFVzZXIyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzA1MTM2NjE0fQ.cry9ZQciAh1X37AUeon2ge4AUf-FYdOL5iI_TyThKkM
+
+###
+post http://localhost:8000/api/exercise
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQzNjEzNmU0LThhODEtNGY4NC1iODU1LTRkYmVhNDY5ZTQzYSIsImVtYWlsIjoiam9obmRvZUBleGFtcGxlLmNvbSIsImlhdCI6MTcwNDczMzAzN30.g_LsBXdDCCNqVerHzjvpLxS5IwhUZXuGiRNOuyp6X80
+Content-Type: application/json
+
+{
+    "name": "bench press",
+    "exerciseType": "BARBELL"
+}
+
+###
+get http://localhost:8000/api/exercise/f04653f9-cd63-4c46-8ed5-11a129d8d7aa
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQzNjEzNmU0LThhODEtNGY4NC1iODU1LTRkYmVhNDY5ZTQzYSIsImVtYWlsIjoiam9obmRvZUBleGFtcGxlLmNvbSIsImlhdCI6MTcwNDczMzAzN30.g_LsBXdDCCNqVerHzjvpLxS5IwhUZXuGiRNOuyp6X80

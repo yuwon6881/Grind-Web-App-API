@@ -1,0 +1,295 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum theme {
+  DARK
+  LIGHT
+}
+
+enum weightUnit {
+  KG
+  LB
+}
+
+enum previousWorkoutValue {
+  Default
+  Template
+}
+
+enum muscleType {
+  PRIMARY
+  SECONDARY
+}
+
+enum exerciseType {
+  BARBELL
+  DUMBBELL
+  MACHINE
+  CABLE
+  BODYWEIGHT
+  DURATION
+}
+
+enum status {
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum set_type {
+  NORMAL
+  DROPSET
+  LONG_LENGTH_PARTIAL
+}
+
+model User {
+  id              String            @id @default(uuid())
+  createdAt       DateTime          @default(now())
+  name            String
+  email           String            @unique
+  password        String
+  profilePicture  Bytes?
+  role            Role              @default(USER)
+  Settings        Settings?
+  Custom_Muscle   Custom_Muscle[]
+  Custom_Exercise Custom_Exercise[]
+  Folder          Folder[]
+}
+
+model Settings {
+  id                   String               @id @default(uuid())
+  theme                theme                @default(LIGHT)
+  weightUnit           weightUnit           @default(KG)
+  rpe                  Boolean              @default(true)
+  previousWorkoutValue previousWorkoutValue @default(Default)
+  user_id              String               @unique
+  belongsTo            User                 @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model Folder {
+  id        String    @id @default(uuid())
+  name      String
+  index     Int       @default(0)
+  user_id   String
+  belongsTo User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  Routine   Routine[]
+}
+
+model Routine {
+  id                      String                    @id @default(uuid())
+  name                    String
+  index                   Int                       @default(0)
+  folder_id               String
+  belongsTo               Folder                    @relation(fields: [folder_id], references: [id], onDelete: Cascade)
+  Workout                 Workout[]
+  Routine_Custom_Exercise Routine_Custom_Exercise[]
+  Routine_Exercise        Routine_Exercise[]
+  Routine_Superset        Routine_Superset[]
+  Routine_Set             Routine_Set[]
+}
+
+model Workout {
+  id                      String                    @id @default(uuid())
+  start_date              DateTime                  @default(now())
+  end_date                DateTime?
+  duration                Float?
+  status                  status                    @default(IN_PROGRESS)
+  routine_id              String
+  belongsTo               Routine                   @relation(fields: [routine_id], references: [id], onDelete: Cascade)
+  Workout_Custom_Exercise Workout_Custom_Exercise[]
+  Workout_Exercise        Workout_Exercise[]
+  Workout_Superset        Workout_Superset[]
+  Workout_Sets            Workout_Sets[]
+}
+
+model Workout_Custom_Exercise {
+  workout_id         String
+  custom_exercise_id String
+  index              Int             @default(0)
+  rest_timer         Float?
+  note               String?
+  Workout            Workout         @relation(fields: [workout_id], references: [id], onDelete: Cascade)
+  Custom_Exercise    Custom_Exercise @relation(fields: [custom_exercise_id], references: [id], onDelete: Cascade)
+
+  @@id([workout_id, custom_exercise_id])
+}
+
+model Workout_Exercise {
+  workout_id  String
+  exercise_id String
+  index       Int      @default(0)
+  rest_timer  Float?
+  note        String?
+  Workout     Workout  @relation(fields: [workout_id], references: [id], onDelete: Cascade)
+  Exercise    Exercise @relation(fields: [exercise_id], references: [id], onDelete: Cascade)
+
+  @@id([workout_id, exercise_id])
+}
+
+model Workout_Superset {
+  id              String            @id @default(uuid())
+  workout_id      String
+  Exercises       Exercise[]
+  Custom_Exercise Custom_Exercise[]
+  belongsTo       Workout           @relation(fields: [workout_id], references: [id], onDelete: Cascade)
+}
+
+model Workout_Sets {
+  id                 String           @id @default(uuid())
+  weight             Float?
+  reps               Int?
+  rpe                Float?
+  volume             Float?
+  index              Int              @default(0)
+  set_type           set_type         @default(NORMAL)
+  workout_id         String
+  exercise_id        String?
+  custom_exercise_id String?
+  Workout            Workout          @relation(fields: [workout_id], references: [id], onDelete: Cascade)
+  Exercise           Exercise?        @relation(fields: [exercise_id], references: [id], onDelete: Cascade)
+  Custom_Exercise    Custom_Exercise? @relation(fields: [custom_exercise_id], references: [id], onDelete: Cascade)
+  Personal_Record    Personal_Record?
+}
+
+model Personal_Record {
+  id             String       @id @default(uuid())
+  workout_set_id String       @unique
+  belongsTo      Workout_Sets @relation(fields: [workout_set_id], references: [id], onDelete: Cascade)
+}
+
+model Custom_Muscle {
+  id                            String                          @id @default(uuid())
+  name                          String
+  user_id                       String
+  belongsTo                     User                            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  Custom_Muscle_Custom_Exercise Custom_Muscle_Custom_Exercise[]
+}
+
+model Custom_Exercise {
+  id                            String                          @id @default(uuid())
+  name                          String
+  image                         Bytes?
+  exerciseType                  exerciseType
+  user_id                       String
+  belongsTo                     User                            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  Custom_Muscle_Custom_Exercise Custom_Muscle_Custom_Exercise[]
+  Custom_Exercise_Muscle        Custom_Exercise_Muscle[]
+  Routine_Custom_Exercise       Routine_Custom_Exercise[]
+  Routine_Superset              Routine_Superset[]
+  Routine_Set                   Routine_Set[]
+  Workout_Custom_Exercise       Workout_Custom_Exercise[]
+  Workout_Superset              Workout_Superset[]
+  workout_SupersetId            String?
+  Workout_Sets                  Workout_Sets[]
+}
+
+model Exercise {
+  id                 String             @id @default(uuid())
+  name               String
+  image              Bytes?
+  exerciseType       exerciseType
+  Routine_Superset   Routine_Superset[]
+  Exercise_Muscle    Exercise_Muscle[]
+  Routine_Exercise   Routine_Exercise[]
+  Routine_Set        Routine_Set[]
+  Workout_Exercise   Workout_Exercise[]
+  Workout_Superset   Workout_Superset[]
+  Workout_Sets       Workout_Sets[]
+}
+
+model Routine_Custom_Exercise {
+  routine_id         String
+  custom_exercise_id String
+  index              Int
+  rest_timer         Float?
+  note               String?
+  Routine            Routine         @relation(fields: [routine_id], references: [id], onDelete: Cascade)
+  Custom_Exercise    Custom_Exercise @relation(fields: [custom_exercise_id], references: [id], onDelete: Cascade)
+
+  @@id([routine_id, custom_exercise_id])
+}
+
+model Routine_Exercise {
+  routine_id  String
+  exercise_id String
+  index       Int      @default(0)
+  rest_timer  Float?
+  note        String?
+  Routine     Routine  @relation(fields: [routine_id], references: [id], onDelete: Cascade)
+  Exercise    Exercise @relation(fields: [exercise_id], references: [id], onDelete: Cascade)
+
+  @@id([routine_id, exercise_id])
+}
+
+model Routine_Superset {
+  id              String            @id @default(uuid())
+  routine_id      String
+  Exercises       Exercise[]
+  Custom_Exercise Custom_Exercise[]
+  belongsTo       Routine           @relation(fields: [routine_id], references: [id], onDelete: Cascade)
+}
+
+model Routine_Set {
+  id                 String           @id @default(uuid())
+  weight             Float?
+  reps               Int?
+  rpe                Float?
+  index              Int              @default(0)
+  exercise_type      set_type         @default(NORMAL)
+  routine_id         String
+  exercise_id        String?
+  custom_exercise_id String?
+  Routine            Routine          @relation(fields: [routine_id], references: [id], onDelete: Cascade)
+  Exercise           Exercise?        @relation(fields: [exercise_id], references: [id], onDelete: Cascade)
+  Custom_Exercise    Custom_Exercise? @relation(fields: [custom_exercise_id], references: [id], onDelete: Cascade)
+}
+
+model Muscle {
+  id                     String                   @id @default(uuid())
+  name                   String
+  Custom_Exercise_Muscle Custom_Exercise_Muscle[]
+  Exercise_Muscle        Exercise_Muscle[]
+}
+
+model Custom_Exercise_Muscle {
+  custom_exercise_id String
+  muscle_id          String
+  muscleType         muscleType
+  Custom_Exercise    Custom_Exercise @relation(fields: [custom_exercise_id], references: [id], onDelete: Cascade)
+  Muscle             Muscle          @relation(fields: [muscle_id], references: [id], onDelete: Cascade)
+
+  @@id([custom_exercise_id, muscle_id])
+}
+
+model Exercise_Muscle {
+  exercise_id String
+  muscle_id   String
+  muscleType  muscleType
+  Exercise    Exercise   @relation(fields: [exercise_id], references: [id], onDelete: Cascade)
+  Muscle      Muscle     @relation(fields: [muscle_id], references: [id], onDelete: Cascade)
+
+  @@id([exercise_id, muscle_id])
+}
+
+model Custom_Muscle_Custom_Exercise {
+  custom_muscle_id   String
+  custom_exercise_id String
+  muscleType         muscleType
+  muscle             Custom_Muscle   @relation(fields: [custom_muscle_id], references: [id], onDelete: Cascade)
+  exercise           Custom_Exercise @relation(fields: [custom_exercise_id], references: [id], onDelete: Cascade)
+
+  @@id([custom_muscle_id, custom_exercise_id])
+}
