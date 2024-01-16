@@ -2,7 +2,6 @@ import { prismaMock } from "../../singleton";
 import { Role, theme, weightUnit, previousWorkoutValue } from "@prisma/client";
 import { createNewUser } from "../user";
 import { Request, Response, NextFunction } from "express";
-import exp from "constants";
 
 const request = {
   body: {},
@@ -11,7 +10,7 @@ const response = {
   json: jest.fn().mockImplementation((json) => json),
   status: jest.fn().mockImplementation((status) => status),
 } as unknown as Response;
-const next = jest.fn();
+const next: NextFunction = jest.fn();
 const user = {
   id: "1",
   name: "test",
@@ -35,6 +34,7 @@ test("should create a new user", async () => {
   request.body = user;
   prismaMock.user.create.mockResolvedValue(user);
   prismaMock.settings.create.mockResolvedValue(settings);
+  prismaMock.$transaction.mockResolvedValue([user, settings]);
   await createNewUser(request, response, next);
 
   expect(response.json).toHaveBeenCalledWith(

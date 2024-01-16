@@ -2,6 +2,7 @@ import jwt, { Secret } from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
 import { User } from "../types/user.type";
+import config from "../config";
 
 //Compare passwords
 
@@ -34,7 +35,7 @@ export const createJWT = (user: User): string => {
       id: user.id,
       email: user.email,
     },
-    process.env.JWT_SECRET as Secret,
+    config.secrets.jwt as Secret,
   );
   return token;
 };
