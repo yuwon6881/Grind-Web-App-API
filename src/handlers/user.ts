@@ -10,68 +10,42 @@ export const createNewUser = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const [user, setting]: [User, Settings] = await prisma.$transaction(
-    async (prisma): Promise<[User, Settings]> => {
-      const newUser = await prisma.user.create({
-        data: {
-          name: req.body.name,
-          email: req.body.email,
-          password: await hashPassword(req.body.password),
-        },
-      });
+  try {
+    const [user, setting]: [User, Settings] = await prisma.$transaction(
+      async (prisma): Promise<[User, Settings]> => {
+        let newUser: User, newSetting: Settings;
 
-      const newSetting = await prisma.settings.create({
-        data: {
-          user_id: newUser.id,
-        },
-      });
+        newUser = await prisma.user.create({
+          data: {
+            name: req.body.name,
+            email: req.body.email,
+            password: await hashPassword(req.body.password),
+          },
+        });
 
-      return [newUser, newSetting];
-    },
-  );
+        newSetting = await prisma.settings.create({
+          data: {
+            user_id: newUser.id,
+          },
+        });
 
-  const token = createJWT(user);
-  res.json({ token });
+        return [newUser, newSetting];
+      },
+    );
+    if (user && setting) {
+      const token = createJWT(user);
+      res.json({ token });
+    }
+  } catch (error: any) {
+    if (error.code === "P2002") {
+      error.message = "Email already exists";
+      error.status = 400;
+    } else {
+      error.message = error.message || "Create user transaction failed";
+    }
 
-  // try {
-  //   console.log("run");
-  //   await prisma.$transaction(async (prisma) => {
-  //     console.log("inside transaction");
-  //     const user = await prisma.user.create({
-  //       data: {
-  //         name: req.body.name,
-  //         email: req.body.email,
-  //         password: await hashPassword(req.body.password),
-  //       },
-  //     });
-
-  //     console.log("still running");
-
-  //     try {
-  //       const settings = await prisma.settings.create({
-  //         data: {
-  //           user_id: user.id,
-  //         },
-  //       });
-  //     } catch (err: any) {
-  //       err.message = "Failed to create user settings";
-  //       next(err);
-  //     }
-
-  //     console.log("it is still running");
-
-  //     const token = createJWT(user);
-  //     res.json({ token });
-  //   });
-  // } catch (err: any) {
-  //   if (err.code === "P2002") {
-  //     err.message = "Email already exists";
-  //     err.name = "inputError";
-  //   } else {
-  //     err.message = "Failed to create user";
-  //   }
-  //   next(err);
-  // }
+    next(error);
+  }
 };
 
 //Sign in

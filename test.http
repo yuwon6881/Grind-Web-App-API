@@ -12,7 +12,7 @@ post http://localhost:8000/signIn
 Content-Type: application/json
 
 {
-    "email": "testUser2@example.com",
+    "email": "testUser@example.com",
     "password": "test123"
 }
 
