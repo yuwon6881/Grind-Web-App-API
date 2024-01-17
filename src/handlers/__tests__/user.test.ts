@@ -1,29 +1,8 @@
 import { prismaMock } from "../../singleton";
 import { Role, theme, weightUnit, previousWorkoutValue } from "@prisma/client";
 import { createNewUser, deleteUser, signIn } from "../user";
-import { Request, Response, NextFunction } from "express";
 import { comparePasswords } from "../../modules/auth";
-
-// Mocks
-let request: Request, response: Response, next: NextFunction;
-
-beforeAll(() => {
-  request = {} as Request;
-
-  response = {
-    json: jest.fn().mockImplementation((json) => json),
-    status: jest.fn().mockImplementation((status) => status),
-  } as unknown as Response;
-  next = jest.fn();
-});
-
-afterEach(() => {
-  jest.clearAllMocks();
-});
-
-afterAll(() => {
-  jest.restoreAllMocks();
-});
+import { request, response, next } from "./mocks";
 
 jest.mock("../../modules/auth", () => ({
   hashPassword: jest.fn().mockResolvedValue("hashedPassword"),

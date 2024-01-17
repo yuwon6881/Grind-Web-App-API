@@ -12,7 +12,7 @@ post http://localhost:8000/signIn
 Content-Type: application/json
 
 {
-    "email": "testUser@example.com",
+    "email": "testUser2@example.com",
     "password": "test123"
 }
 
@@ -21,7 +21,8 @@ get http://localhost:8000/
 
 ###
 get http://localhost:8000/api/folders
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU1ZTRkNjcxLThhNjgtNGU1Zi1hN2ZjLWUxM2Y3ODVkNWNjMCIsImVtYWlsIjoidGVzdFVzZXIyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzA1MTM2NjE0fQ.cry9ZQciAh1X37AUeon2ge4AUf-FYdOL5iI_TyThKkM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE3YjczZWYwLTc3ODctNDA5NS1iNWE3LWU5ZjlhZmZmZDc0ZSIsImVtYWlsIjoidGVzdFVzZXIyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzA1NDkxODQ1fQ.p-u1HXXabYXvs4jOHyFy5lFCkJuY_pKKCKnr5tZVZJY
+
 
 ###
 post http://localhost:8000/api/exercise

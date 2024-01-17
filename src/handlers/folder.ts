@@ -1,5 +1,5 @@
 import prisma from "../db";
-import e, { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 
 //Get all folders for a user
 export const getFolders = async (
@@ -17,7 +17,7 @@ export const getFolders = async (
       },
     });
 
-    res.json({ data: user!.Folder });
+    res.json({ data: user });
   } catch (err: any) {
     err.message = "Failed to get folders";
     next(err);
