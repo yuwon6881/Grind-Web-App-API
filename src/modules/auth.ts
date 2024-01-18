@@ -18,9 +18,9 @@ export const comparePasswords = async (
   }
 };
 
-export const hashPassword = (password: string): Promise<string> => {
+export const hashPassword = async (password: string): Promise<string> => {
   try {
-    return bcrypt.hash(password, 10);
+    return await bcrypt.hash(password, 10);
   } catch (err: any) {
     err.message = "Failed to hash password";
     throw err;
@@ -63,7 +63,7 @@ export const protect = (
   }
 
   try {
-    const user = jwt.verify(token, process.env.JWT_SECRET as Secret) as User;
+    const user = jwt.verify(token, config.secrets.jwt as Secret) as User;
     req.user = user;
     next();
   } catch (e) {
