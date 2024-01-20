@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "SET NODE_ENV=test&jest",
+    "test:unit": "SET NODE_ENV=test&jest --config jest.config.js",
+    "test:integration": "SET NODE_ENV=test&jest --config jest.integration.config.js",
     "dev": "ts-node --files src/index.ts"
   },
   "keywords": [],

@@ -1,5 +1,4 @@
 import { prismaMock } from "../../singleton";
-import { Request, Response, NextFunction } from "express";
 import { getFolders, createFolder, deleteFolder } from "../folder";
 import { Folder, User, Role } from "@prisma/client";
 import { request, response, next } from "./mocks";
@@ -37,35 +36,38 @@ const userFolder: User & { Folder: Folder[] } = {
 
 // Tests
 describe("getFolders", () => {
-  // Valid request
-  test("should return folders", async () => {
-    request.user = user;
-    prismaMock.user.findUnique.mockResolvedValue(userFolder);
-    await getFolders(request, response, next);
-    expect(response.json).toHaveBeenCalledWith(
-      expect.objectContaining({
-        data: expect.objectContaining({
-          Folder: folders,
+  describe("when request is valid", () => {
+    test("it should return folders", async () => {
+      request.user = user;
+      prismaMock.user.findUnique.mockResolvedValue(userFolder);
+      await getFolders(request, response, next);
+      expect(response.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            Folder: folders,
+          }),
         }),
-      }),
-    );
+      );
+    });
   });
 
-  // Invalid request
-  test("should return error", async () => {
-    request.user = user;
-    prismaMock.user.findUnique.mockRejectedValue(new Error());
-    await getFolders(request, response, next);
-    expect(next).toHaveBeenCalledWith(
-      expect.objectContaining({
-        message: "Failed to get folders",
-      }),
-    );
+  describe("when request is invalid", () => {
+    test("it should return error", async () => {
+      request.user = user;
+      prismaMock.user.findUnique.mockRejectedValue(new Error());
+      await getFolders(request, response, next);
+      expect(next).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: "Failed to get folders",
+        }),
+      );
+    });
   });
+});
 
-  describe("createFolder", () => {
-    // Valid request
-    test("should return folder", async () => {
+describe("createFolder", () => {
+  describe("when request is valid", () => {
+    test("it should return folder", async () => {
       request.user = user;
       request.body = {
         name: folders[0].name,
@@ -78,9 +80,10 @@ describe("getFolders", () => {
         }),
       );
     });
+  });
 
-    // Invalid request
-    test("should return error", async () => {
+  describe("when request is invalid", () => {
+    test("it should return error", async () => {
       request.user = user;
       request.body = {
         name: folders[0].name,
@@ -94,10 +97,11 @@ describe("getFolders", () => {
       );
     });
   });
+});
 
-  describe("deleteFolder", () => {
-    // Valid request
-    test("should return deleted folder", async () => {
+describe("deleteFolder", () => {
+  describe("when request is valid", () => {
+    test("it should return deleted folder", async () => {
       request.user = user;
       request.params = {
         id: folders[0].id,
@@ -110,9 +114,10 @@ describe("getFolders", () => {
         }),
       );
     });
+  });
 
-    // Invalid request
-    test("should return error", async () => {
+  describe("when request is invalid", () => {
+    test("it should return error", async () => {
       request.user = user;
       request.params = {
         id: folders[0].id,

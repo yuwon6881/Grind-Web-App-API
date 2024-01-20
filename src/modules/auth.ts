@@ -18,9 +18,9 @@ export const comparePasswords = async (
   }
 };
 
-export const hashPassword = (password: string): Promise<string> => {
+export const hashPassword = async (password: string): Promise<string> => {
   try {
-    return bcrypt.hash(password, 10);
+    return await bcrypt.hash(password, 10);
   } catch (err: any) {
     err.message = "Failed to hash password";
     throw err;

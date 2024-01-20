@@ -39,7 +39,7 @@ export const createNewUser = async (
   } catch (error: any) {
     if (error.code === "P2002") {
       error.message = "Email already exists";
-      error.status = 400;
+      error.name = "inputError";
     } else {
       error.message = error.message || "Create user transaction failed";
     }

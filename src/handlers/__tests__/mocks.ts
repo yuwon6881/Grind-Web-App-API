@@ -10,11 +10,3 @@ beforeAll(() => {
   } as unknown as Response;
   next = jest.fn();
 });
-
-afterEach(() => {
-  jest.clearAllMocks();
-});
-
-afterAll(() => {
-  jest.restoreAllMocks();
-});
