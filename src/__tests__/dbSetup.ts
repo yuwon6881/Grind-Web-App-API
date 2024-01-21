@@ -7,19 +7,18 @@ export const initializeTestDb = async () => {
   const result: any[] =
     await prisma.$queryRaw`SELECT 1 FROM pg_database WHERE datname = 'grindtest'`;
 
-  if (result.length === 0) {
-    await prisma.$executeRaw`CREATE DATABASE grindtest`;
-  } else {
-    await prisma.$executeRaw`DROP DATABASE grindtest`;
-    await prisma.$executeRaw`CREATE DATABASE grindtest`;
-  }
-
-  execSync("npx prisma migrate deploy", {
+  const env = {
     env: {
       ...process.env,
       DATABASE_URL: config.secrets.dbUrl,
     },
-  });
+  };
+
+  if (result.length === 0) {
+    await prisma.$executeRaw`CREATE DATABASE grindtest`;
+  }
+
+  execSync("npx prisma migrate deploy", env);
 };
 
 export const resetDb = async () => {

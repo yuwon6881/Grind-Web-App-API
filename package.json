@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test:unit": "SET NODE_ENV=test&jest --config jest.config.js",
+    "test:unit:watch": "SET NODE_ENV=test&jest --config jest.config.js --watch",
     "test:integration": "SET NODE_ENV=test&jest --config jest.integration.config.js",
+    "test:integration:watch": "SET NODE_ENV=test&jest --config jest.integration.config.js --watch",
     "dev": "ts-node --files src/index.ts"
   },
   "keywords": [],
@@ -21,12 +23,12 @@
     "eslint": "^8.56.0",
     "jest-mock-extended": "^3.0.5",
     "prettier": "^3.1.1",
-    "prisma": "^5.7.1",
+    "prisma": "^5.8.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@prisma/client": "^5.7.1",
+    "@prisma/client": "^5.8.1",
     "@types/jest": "^29.5.11",
     "@types/lodash.merge": "^4.6.9",
     "@types/supertest": "^6.0.2",
