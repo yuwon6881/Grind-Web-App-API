@@ -28,14 +28,14 @@ describe("User Endpoints", () => {
         });
       });
     });
-    describe("when no email is provided", () => {
-      test("it should return an error", async () => {});
-    });
-    describe("when no password is provided", () => {
-      test("it should return an error", async () => {});
-    });
-    describe("when no name is provided", () => {
-      test("it should return an error", async () => {});
-    });
+    // describe("when no email is provided", () => {
+    //   test("it should return an error", async () => {});
+    // });
+    // describe("when no password is provided", () => {
+    //   test("it should return an error", async () => {});
+    // });
+    // describe("when no name is provided", () => {
+    //   test("it should return an error", async () => {});
+    // });
   });
 });
