@@ -1,17 +1,7 @@
 import app from "../server";
+import { user, signInUser } from "./testData";
 
 const request = require("supertest");
-//Test data
-const user = {
-  name: "test",
-  email: "test@test.com",
-  password: "password",
-};
-
-const signInUser = {
-  ...user,
-  name: undefined,
-};
 
 describe("User Endpoints", () => {
   describe("POST /user", () => {

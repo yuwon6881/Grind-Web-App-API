@@ -10,11 +10,6 @@ const user = {
 let token: string;
 
 describe("protect middleware", () => {
-  beforeEach(async () => {
-    //create user
-    const response = await request(app).post("/api/user").send(user);
-    token = response.body.token;
-  });
   describe("when no token is provided", () => {
     test("it should return an error", async () => {
       const response = await request(app).delete("/api/user");
