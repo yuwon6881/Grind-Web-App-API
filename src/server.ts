@@ -12,7 +12,8 @@ import "./middlewares/appErrorHandler";
 
 const app = express();
 
-app.use(morgan("dev"));
+app.use(morgan("dev", { skip: () => process.env.NODE_ENV === "test" }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

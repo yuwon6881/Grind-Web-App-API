@@ -5,7 +5,10 @@ module.exports = {
   clearMocks: true,
   globalSetup: "<rootDir>/src/__tests__/setup.ts",
   globalTeardown: "<rootDir>/src/__tests__/teardown.ts",
-  setupFilesAfterEnv: ["<rootDir>/src/__tests__/beforeEach.ts"],
+  setupFilesAfterEnv: [
+    "<rootDir>/src/__tests__/beforeEach.ts",
+    "<rootDir>/src/__tests__/afterEach.ts",
+  ],
   testPathIgnorePatterns: [
     "<rootDir>/node_modules/",
     "<rootDir>/src/handlers/__tests__",
@@ -14,5 +17,6 @@ module.exports = {
     "<rootDir>/src/__tests__/beforeEach",
     "<rootDir>/src/__tests__/testData",
     "<rootDir>/src/__tests__/teardown.ts",
+    "<rootDir>/src/__tests__/afterEach.ts",
   ],
 };

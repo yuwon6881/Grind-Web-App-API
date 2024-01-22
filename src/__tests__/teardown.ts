@@ -1,5 +1,7 @@
-import prisma from "../db";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+
 export default async () => {
-  await prisma.$disconnect();
   await prisma.$executeRaw`DROP DATABASE grindtest;`;
 };
