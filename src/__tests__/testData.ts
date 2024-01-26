@@ -1,3 +1,5 @@
+import { exerciseType } from "@prisma/client";
+
 export const user = {
   name: "test",
   email: "test@test.com",
@@ -7,4 +9,10 @@ export const user = {
 export const signInUser = {
   ...user,
   name: undefined,
+};
+
+export const exercise = {
+  name: "Squat",
+  image: null,
+  exerciseType: exerciseType.BARBELL,
 };

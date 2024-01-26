@@ -36,15 +36,19 @@ export const createNewUser = async (
       const token = createJWT(user);
       res.json({ token });
     }
-  } catch (error: any) {
-    if (error.code === "P2002") {
-      error.message = "Email already exists";
-      error.name = "inputError";
-    } else {
-      error.message = error.message || "Create user transaction failed";
-    }
+  } catch (error: unknown) {
+    const customError = error as Error & { code: string };
+    if (customError instanceof Error) {
+      if (customError.code === "P2002") {
+        customError.message = "Email already exists";
+        customError.name = "inputError";
+      } else {
+        customError.message =
+          customError.message || "Create user transaction failed";
+      }
 
-    next(error);
+      next(customError);
+    }
   }
 };
 
@@ -78,9 +82,11 @@ export const signIn = async (
 
     const token = createJWT(user);
     res.json({ token });
-  } catch (err: any) {
-    err.message = "Failed to sign in";
-    next(err);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      error.message = "Failed to sign in";
+      next(error);
+    }
   }
 };
 
@@ -98,8 +104,16 @@ export const deleteUser = async (
       },
     });
     res.json({ data: user });
-  } catch (err: any) {
-    err.message = "Failed to delete user";
-    next(err);
+  } catch (error: unknown) {
+    const customError = error as Error & { code: string };
+    if (customError instanceof Error) {
+      if (customError.code === "P2025") {
+        customError.name = "notFound";
+        customError.message = "User not found";
+      } else {
+        customError.message = "Failed to delete user";
+      }
+      next(customError);
+    }
   }
 };

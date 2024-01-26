@@ -1,5 +1,5 @@
 import prisma from "../db";
-import { Request, Response, NextFunction } from "express";
+import e, { Request, Response, NextFunction } from "express";
 
 // get all exercises
 export const getExercises = async (
@@ -10,9 +10,11 @@ export const getExercises = async (
   try {
     const exercises = await prisma.exercise.findMany();
     res.json({ data: exercises });
-  } catch (err: any) {
-    err.message = "Failed to get exercises";
-    next(err);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      error.message = "Failed to get exercises";
+      next(error);
+    }
   }
 };
 
@@ -28,10 +30,18 @@ export const getExercise = async (
         id: req.params.id,
       },
     });
+    if (!exercise) {
+      let error = new Error();
+      error.message = "Exercise not found";
+      error.name = "inputError";
+      throw error;
+    }
     res.json({ data: exercise });
-  } catch (err: any) {
-    err.message = "Failed to get exercise";
-    next(err);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      error.message = error.message || "Failed to get exercise";
+      next(error);
+    }
   }
 };
 
@@ -49,9 +59,11 @@ export const createExercise = async (
       },
     });
     res.json({ data: exercise });
-  } catch (err: any) {
-    err.message = "Failed to create exercise";
-    next(err);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      error.message = "Failed to create exercise";
+      next(error);
+    }
   }
 };
 
@@ -68,8 +80,15 @@ export const deleteExercise = async (
       },
     });
     res.json({ data: deleted });
-  } catch (err: any) {
-    err.message = "Failed to delete exercise";
-    next(err);
+  } catch (error: unknown) {
+    const customError = error as Error & { code: string };
+    if (customError instanceof Error) {
+      if (customError.code === "P2025") {
+        customError.name = "inputError";
+        customError.message = "Exercise not found";
+      }
+      customError.message = customError.message || "Failed to delete exercise";
+      next(customError);
+    }
   }
 };

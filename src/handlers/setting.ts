@@ -14,10 +14,18 @@ export const getSetting = async (
         id: req.params.id,
       },
     });
+    if (!setting) {
+      let error = new Error();
+      error.message = "Setting not found";
+      error.name = "inputError";
+      throw error;
+    }
     res.json({ data: setting });
-  } catch (err: any) {
-    err.message = "Failed to get user setting";
-    next(err);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      error.message = error.message || "Failed to get user setting";
+      next(error);
+    }
   }
 };
 
@@ -36,8 +44,16 @@ export const updateSetting = async (
       data: req.body,
     });
     res.json({ data: setting });
-  } catch (err: any) {
-    err.message = "Failed to update user setting";
-    next(err);
+  } catch (error: unknown) {
+    const customError = error as Error & { code: string };
+    if (customError instanceof Error) {
+      if (customError.code === "P2025") {
+        customError.name = "notFound";
+        customError.message = "Setting not found";
+      } else {
+        customError.message = "Failed to update user setting";
+      }
+      next(customError);
+    }
   }
 };

@@ -27,7 +27,7 @@ const exercises: Exercise[] = [
 // Tests
 describe("getExercises", () => {
   describe("when request is valid", () => {
-    test("it should return exercises", async () => {
+    it("should return exercises", async () => {
       prismaMock.exercise.findMany.mockResolvedValue(exercises);
       await getExercises(request, response, next);
       expect(response.json).toHaveBeenCalledWith(
@@ -39,7 +39,7 @@ describe("getExercises", () => {
   });
 
   describe("when request is invalid", () => {
-    test("it should return error", async () => {
+    it("should return error", async () => {
       prismaMock.exercise.findMany.mockRejectedValue(new Error());
       await getExercises(request, response, next);
       expect(next).toHaveBeenCalledWith(
@@ -53,7 +53,7 @@ describe("getExercises", () => {
 
 describe("getExercise", () => {
   describe("when request is valid", () => {
-    test("it should return an exercise", async () => {
+    it("should return an exercise", async () => {
       request.params = { id: "1" };
       prismaMock.exercise.findUnique.mockResolvedValue(exercises[0]);
       await getExercise(request, response, next);
@@ -66,7 +66,7 @@ describe("getExercise", () => {
   });
 
   describe("when request is invalid", () => {
-    test("it should return error", async () => {
+    it("should return error", async () => {
       request.params = { id: "1" };
       prismaMock.exercise.findUnique.mockRejectedValue(new Error());
       await getExercise(request, response, next);
@@ -81,7 +81,7 @@ describe("getExercise", () => {
 
 describe("createExercise", () => {
   describe("when request is valid", () => {
-    test("it should return an exercise", async () => {
+    it("should return an exercise", async () => {
       request.body = exercises[0];
       prismaMock.exercise.create.mockResolvedValue(exercises[0]);
       await createExercise(request, response, next);
@@ -94,7 +94,7 @@ describe("createExercise", () => {
   });
 
   describe("when request is invalid", () => {
-    test("it should return error", async () => {
+    it("should return error", async () => {
       request.body = exercises[0];
       prismaMock.exercise.create.mockRejectedValue(new Error());
       await createExercise(request, response, next);
@@ -109,7 +109,7 @@ describe("createExercise", () => {
 
 describe("deleteExercise", () => {
   describe("when request is valid", () => {
-    test("it should return deleted exercise", async () => {
+    it("should return deleted exercise", async () => {
       request.params = { id: "1" };
       prismaMock.exercise.delete.mockResolvedValue(exercises[0]);
       await deleteExercise(request, response, next);
@@ -122,7 +122,7 @@ describe("deleteExercise", () => {
   });
 
   describe("when request is invalid", () => {
-    test("it should return error", async () => {
+    it("should return error", async () => {
       request.params = { id: "1" };
       prismaMock.exercise.delete.mockRejectedValue(new Error());
       await deleteExercise(request, response, next);

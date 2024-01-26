@@ -39,7 +39,7 @@ const signInData = {
 
 describe("createNewUser", () => {
   describe("when request is valid", () => {
-    test("it should return a user", async () => {
+    it("should return a user", async () => {
       request.body = user;
       prismaMock.user.create.mockResolvedValue(user);
       prismaMock.settings.create.mockResolvedValue(settings);
@@ -53,7 +53,7 @@ describe("createNewUser", () => {
   });
 
   describe("when transaction failed", () => {
-    test("it should return a transaction error", async () => {
+    it("should return a transaction error", async () => {
       request.body = user;
       prismaMock.$transaction.mockRejectedValue(new Error());
       await createNewUser(request, response, next);
@@ -66,7 +66,7 @@ describe("createNewUser", () => {
   });
 
   describe("when database failed", () => {
-    test("it should give me a db error message", async () => {
+    it("should give me a db error message", async () => {
       request.body = user;
       const dbError = new Error("Database error");
       prismaMock.$transaction.mockRejectedValue(dbError);
@@ -83,7 +83,7 @@ describe("createNewUser", () => {
 
 describe("signIn", () => {
   describe("when request is valid", () => {
-    test("it should return a token", async () => {
+    it("should return a token", async () => {
       request.body = signInData;
       prismaMock.user.findUnique.mockResolvedValue(user);
       await signIn(request, response, next);
@@ -94,7 +94,7 @@ describe("signIn", () => {
   });
 
   describe("when database failed", () => {
-    test("it should return a sign in error", async () => {
+    it("should return a sign in error", async () => {
       request.body = signInData;
       prismaMock.user.findUnique.mockRejectedValue(new Error());
       await signIn(request, response, next);
@@ -107,7 +107,7 @@ describe("signIn", () => {
   });
 
   describe("when incorrect password", () => {
-    test("it should return a password error", async () => {
+    it("should return a password error", async () => {
       request.body = signInData;
       prismaMock.user.findUnique.mockResolvedValue(user);
       (comparePasswords as jest.Mock).mockResolvedValue(false);
@@ -120,7 +120,7 @@ describe("signIn", () => {
   });
 
   describe("when no user found", () => {
-    test("it should return a user not found error", async () => {
+    it("should return a user not found error", async () => {
       request.body = signInData;
       prismaMock.user.findUnique.mockResolvedValue(null);
       await signIn(request, response, next);
@@ -134,7 +134,7 @@ describe("signIn", () => {
 
 describe("deleteUser", () => {
   describe("when request is valid", () => {
-    test("it should return deleted user", async () => {
+    it("should return deleted user", async () => {
       request.user = user;
       prismaMock.user.delete.mockResolvedValue(user);
       await deleteUser(request, response, next);
@@ -145,7 +145,7 @@ describe("deleteUser", () => {
   });
 
   describe("when database failed", () => {
-    test("it should return failed to delete user error", async () => {
+    it("should return failed to delete user error", async () => {
       request.user = user;
       prismaMock.user.delete.mockRejectedValue(new Error());
       await deleteUser(request, response, next);

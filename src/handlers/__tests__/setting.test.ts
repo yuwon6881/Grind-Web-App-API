@@ -16,7 +16,7 @@ const settings = {
 // Tests
 describe("getSetting", () => {
   describe("when request is valid", () => {
-    test("it should return a setting", async () => {
+    it("should return a setting", async () => {
       request.params = { id: "1" };
       prismaMock.settings.findUnique.mockResolvedValue(settings);
       await getSetting(request, response, next);
@@ -25,7 +25,7 @@ describe("getSetting", () => {
   });
 
   describe("when request is invalid", () => {
-    test("it should return error", async () => {
+    it("should return error", async () => {
       request.params = { id: "1" };
       prismaMock.settings.findUnique.mockRejectedValue(new Error());
       await getSetting(request, response, next);
@@ -38,7 +38,7 @@ describe("getSetting", () => {
 
 describe("updateSetting", () => {
   describe("when request is valid", () => {
-    test("it should return a setting", async () => {
+    it("should return a setting", async () => {
       request.body = settings;
       prismaMock.settings.update.mockResolvedValue(settings);
       await updateSetting(request, response, next);
@@ -47,7 +47,7 @@ describe("updateSetting", () => {
   });
 
   describe("when request is invalid", () => {
-    test("it should return failed to update user setting error)", async () => {
+    it("should return failed to update user setting error)", async () => {
       request.body = settings;
       prismaMock.settings.update.mockRejectedValue(new Error());
       await updateSetting(request, response, next);

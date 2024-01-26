@@ -37,22 +37,20 @@ const userFolder: User & { Folder: Folder[] } = {
 // Tests
 describe("getFolders", () => {
   describe("when request is valid", () => {
-    test("it should return folders", async () => {
+    it("should return folders", async () => {
       request.user = user;
       prismaMock.user.findUnique.mockResolvedValue(userFolder);
       await getFolders(request, response, next);
       expect(response.json).toHaveBeenCalledWith(
         expect.objectContaining({
-          data: expect.objectContaining({
-            Folder: folders,
-          }),
+          data: folders,
         }),
       );
     });
   });
 
   describe("when request is invalid", () => {
-    test("it should return error", async () => {
+    it("should return error", async () => {
       request.user = user;
       prismaMock.user.findUnique.mockRejectedValue(new Error());
       await getFolders(request, response, next);
@@ -67,7 +65,7 @@ describe("getFolders", () => {
 
 describe("createFolder", () => {
   describe("when request is valid", () => {
-    test("it should return folder", async () => {
+    it("should return folder", async () => {
       request.user = user;
       request.body = {
         name: folders[0].name,
@@ -83,7 +81,7 @@ describe("createFolder", () => {
   });
 
   describe("when request is invalid", () => {
-    test("it should return error", async () => {
+    it("should return error", async () => {
       request.user = user;
       request.body = {
         name: folders[0].name,
@@ -101,7 +99,7 @@ describe("createFolder", () => {
 
 describe("deleteFolder", () => {
   describe("when request is valid", () => {
-    test("it should return deleted folder", async () => {
+    it("should return deleted folder", async () => {
       request.user = user;
       request.params = {
         id: folders[0].id,
@@ -117,7 +115,7 @@ describe("deleteFolder", () => {
   });
 
   describe("when request is invalid", () => {
-    test("it should return error", async () => {
+    it("should return error", async () => {
       request.user = user;
       request.params = {
         id: folders[0].id,

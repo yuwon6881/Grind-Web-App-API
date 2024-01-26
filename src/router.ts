@@ -23,7 +23,7 @@ router.get("/setting/:id", getSetting);
 router.put("/setting/:id", validateSettingInput, updateSetting);
 
 // exercises
-router.get("/exercise", getExercises);
+router.get("/exercises", getExercises);
 router.get("/exercise/:id", getExercise);
 router.post("/exercise", validateExerciseInput, createExercise);
 router.delete("/exercise/:id", deleteExercise);

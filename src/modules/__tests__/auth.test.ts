@@ -26,13 +26,13 @@ jest.mock("jsonwebtoken", () => ({
 
 describe("comparePasswords", () => {
   //Valid password
-  test("should return true", async () => {
+  it("should return true", async () => {
     const result = await comparePasswords("password", "hashedPassword");
     expect(result).toBe(true);
   });
 
   //Invalid password
-  test("should throw error", async () => {
+  it("should throw error", async () => {
     (bcrypt.compare as jest.Mock).mockImplementationOnce(() => {
       throw new Error("Failed to compare passwords");
     });
@@ -44,13 +44,13 @@ describe("comparePasswords", () => {
 
 describe("hashPassword", () => {
   //Fine request
-  test("should return hashed password", async () => {
+  it("should return hashed password", async () => {
     const result = await hashPassword("password");
     expect(result).toBe("hashedPassword");
   });
 
   //Failed request
-  test("should throw error", async () => {
+  it("should throw error", async () => {
     (bcrypt.hash as jest.Mock).mockImplementationOnce(() => {
       throw new Error("Failed to hash password");
     });
@@ -62,7 +62,7 @@ describe("hashPassword", () => {
 
 describe("createJWT", () => {
   //Valid request
-  test("should return a token", async () => {
+  it("should return a token", async () => {
     const result = createJWT(user);
     expect(result).toBe("token");
   });
@@ -70,7 +70,7 @@ describe("createJWT", () => {
 
 describe("protect", () => {
   //Valid request
-  test("should call next", async () => {
+  it("should call next", async () => {
     request.headers = {
       authorization: "Bearer token",
     };
@@ -79,7 +79,7 @@ describe("protect", () => {
   });
 
   //No token provided
-  test("should return unauthorized no token provided", async () => {
+  it("should return unauthorized no token provided", async () => {
     request.headers = {};
     protect(request, response, next);
     expect(response.status).toHaveBeenCalledWith(401);
@@ -89,7 +89,7 @@ describe("protect", () => {
   });
 
   //Invalid bearer token format
-  test("should return unauthorized invalid token", async () => {
+  it("should return unauthorized invalid token", async () => {
     request.headers = {
       authorization: "Bearer",
     };
@@ -101,7 +101,7 @@ describe("protect", () => {
   });
 
   //Invalid token
-  test("should return unauthorized invalid token", async () => {
+  it("should return unauthorized invalid token", async () => {
     (jwt.verify as jest.Mock).mockImplementationOnce(() => {
       throw new Error("Invalid token");
     });

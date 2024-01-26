@@ -12,18 +12,26 @@ export const comparePasswords = async (
 ): Promise<boolean> => {
   try {
     return await bcrypt.compare(password, hashedPassword);
-  } catch (err: any) {
-    err.message = "Failed to compare passwords";
-    throw err;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      error.message = "Failed to compare passwords";
+      throw error;
+    } else {
+      throw new Error("An unexpected error occurred");
+    }
   }
 };
 
 export const hashPassword = async (password: string): Promise<string> => {
   try {
     return await bcrypt.hash(password, 10);
-  } catch (err: any) {
-    err.message = "Failed to hash password";
-    throw err;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      error.message = "Failed to hash password";
+      throw error;
+    } else {
+      throw new Error("An unexpected error occurred");
+    }
   }
 };
 

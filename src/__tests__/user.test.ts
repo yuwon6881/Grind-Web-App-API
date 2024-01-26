@@ -1,4 +1,5 @@
 import app from "../server";
+import { Response } from "supertest";
 import { user, signInUser } from "./testData";
 
 const request = require("supertest");
@@ -6,17 +7,17 @@ const request = require("supertest");
 describe("User Endpoints", () => {
   describe("POST /user", () => {
     describe("when request is valid", () => {
-      test("it should return a token", async () => {
-        const response = await request(app).post("/user").send(user);
+      it("should return a token", async () => {
+        const response: Response = await request(app).post("/user").send(user);
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty("token");
         expect(typeof response.body.token).toBe("string");
       });
     });
     describe("when email is already taken", () => {
-      test("it should return an error", async () => {
+      it("should return an error", async () => {
         await request(app).post("/user").send(user);
-        const response = await request(app).post("/user").send(user);
+        const response: Response = await request(app).post("/user").send(user);
         expect(response.status).toBe(400);
         expect(response.body).toMatchObject({
           message: "Email already exists",
@@ -24,8 +25,8 @@ describe("User Endpoints", () => {
       });
     });
     describe("when no email is provided", () => {
-      test("it should return an error", async () => {
-        const response = await request(app)
+      it("should return an error", async () => {
+        const response: Response = await request(app)
           .post("/user")
           .send({ ...user, email: null });
         expect(response.status).toBe(400);
@@ -41,8 +42,8 @@ describe("User Endpoints", () => {
       });
     });
     describe("when no password is provided", () => {
-      test("it should return an error", async () => {
-        const response = await request(app)
+      it("should return an error", async () => {
+        const response: Response = await request(app)
           .post("/user")
           .send({ ...user, password: null });
         expect(response.status).toBe(400);
@@ -58,8 +59,8 @@ describe("User Endpoints", () => {
       });
     });
     describe("when no name is provided", () => {
-      test("it should return an error", async () => {
-        const response = await request(app)
+      it("should return an error", async () => {
+        const response: Response = await request(app)
           .post("/user")
           .send({ ...user, name: null });
         expect(response.status).toBe(400);
@@ -81,16 +82,18 @@ describe("User Endpoints", () => {
       await request(app).post("/user").send(user);
     });
     describe("when request is valid", () => {
-      test("it should return a token", async () => {
-        const response = await request(app).post("/signIn").send(signInUser);
+      it("should return a token", async () => {
+        const response: Response = await request(app)
+          .post("/signIn")
+          .send(signInUser);
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty("token");
         expect(typeof response.body.token).toBe("string");
       });
     });
     describe("when user is not found", () => {
-      test("it should return a no user found error", async () => {
-        const response = await request(app)
+      it("should return a no user found error", async () => {
+        const response: Response = await request(app)
           .post("/signIn")
           .send({ ...signInUser, email: "invalidEmail@test.com" });
         expect(response.status).toBe(401);
@@ -100,8 +103,8 @@ describe("User Endpoints", () => {
       });
     });
     describe("when password is invalid", () => {
-      test("it should return an invalid password error", async () => {
-        const response = await request(app)
+      it("should return an invalid password error", async () => {
+        const response: Response = await request(app)
           .post("/signIn")
           .send({ ...signInUser, password: "invalidPassword" });
         expect(response.status).toBe(401);
@@ -111,8 +114,8 @@ describe("User Endpoints", () => {
       });
     });
     describe("when no email is provided", () => {
-      test("it should return an error", async () => {
-        const response = await request(app)
+      it("should return an error", async () => {
+        const response: Response = await request(app)
           .post("/signIn")
           .send({ ...signInUser, email: null });
         expect(response.status).toBe(400);
@@ -128,8 +131,8 @@ describe("User Endpoints", () => {
       });
     });
     describe("when no password is provided", () => {
-      test("it should return an error", async () => {
-        const response = await request(app)
+      it("should return an error", async () => {
+        const response: Response = await request(app)
           .post("/signIn")
           .send({ ...signInUser, password: null });
         expect(response.status).toBe(400);
@@ -149,12 +152,12 @@ describe("User Endpoints", () => {
     let token: string;
     beforeEach(async () => {
       //create user
-      const response = await request(app).post("/user").send(user);
+      const response: Response = await request(app).post("/user").send(user);
       token = response.body.token;
     });
     describe("when request is valid", () => {
-      test("it should delete the user", async () => {
-        const response = await request(app)
+      it("should delete the user", async () => {
+        const response: Response = await request(app)
           .delete("/api/user")
           .set("Authorization", `Bearer ${token}`);
         expect(response.status).toBe(200);

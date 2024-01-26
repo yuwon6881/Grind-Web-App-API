@@ -17,10 +17,12 @@ export const getFolders = async (
       },
     });
 
-    res.json({ data: user });
-  } catch (err: any) {
-    err.message = "Failed to get folders";
-    next(err);
+    res.json({ data: user?.Folder });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      error.message = "Failed to get folders";
+      next(error);
+    }
   }
 };
 
@@ -39,9 +41,11 @@ export const createFolder = async (
     });
 
     res.json({ data: folder });
-  } catch (err: any) {
-    err.message = "Failed to create folder";
-    next(err);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      error.message = "Failed to create folder";
+      next(error);
+    }
   }
 };
 
@@ -59,8 +63,16 @@ export const deleteFolder = async (
       },
     });
     res.json({ data: deleted });
-  } catch (err: any) {
-    err.message = "Failed to delete folder";
-    next(err);
+  } catch (error: unknown) {
+    const customError = error as Error & { code?: string };
+    if (customError instanceof Error) {
+      if (customError.code === "P2025") {
+        customError.name = "notFound";
+        customError.message = "Folder not found";
+      } else {
+        customError.message = "Failed to delete folder";
+      }
+      next(customError);
+    }
   }
 };

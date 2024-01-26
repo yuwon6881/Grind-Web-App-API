@@ -1,7 +1,8 @@
 import app from "../server";
 import { user } from "./testData";
+import { Response } from "supertest";
 import prisma from "../db";
-import { Settings } from "@prisma/client";
+import { Settings, theme } from "@prisma/client";
 const request = require("supertest");
 
 describe("Setting Endpoints", () => {
@@ -9,7 +10,7 @@ describe("Setting Endpoints", () => {
   let setting: Settings;
 
   beforeEach(async () => {
-    const response = await request(app).post("/user").send(user);
+    const response: Response = await request(app).post("/user").send(user);
     token = response.body.token;
     const userWithSettings = await prisma.user.findUnique({
       where: {
@@ -21,14 +22,51 @@ describe("Setting Endpoints", () => {
     });
     setting = userWithSettings!.Settings!;
   });
-  describe("GET /setting", () => {
+  describe("GET /setting/id", () => {
     describe("when request is valid", () => {
-      test("it should return a setting", async () => {
-        const response = await request(app)
+      it("should return a setting", async () => {
+        const response: Response = await request(app)
           .get(`/api/setting/${setting.id}`)
           .set("Authorization", `Bearer ${token}`);
         expect(response.status).toBe(200);
         expect(response.body.data).toEqual(setting);
+      });
+    });
+    describe("when setting doesnt exists", () => {
+      it("should return an empty array", async () => {
+        const response: Response = await request(app)
+          .get(`/api/setting/${setting.id + 1}`)
+          .set("Authorization", `Bearer ${token}`);
+        expect(response.status).toBe(400);
+        expect(response.body.message).toEqual("Setting not found");
+      });
+    });
+  });
+  describe("UPDATE /setting/id", () => {
+    describe("when request is valid", () => {
+      it("should update a setting", async () => {
+        const response: Response = await request(app)
+          .put(`/api/setting/${setting.id}`)
+          .set("Authorization", `Bearer ${token}`)
+          .send({ theme: theme.DARK, rpe: false });
+
+        expect(response.status).toBe(200);
+        expect(response.body.data).toEqual({
+          ...setting,
+          theme: theme.DARK,
+          rpe: false,
+        });
+      });
+    });
+    describe("when setting doesnt exists", () => {
+      it("should return an error", async () => {
+        const response: Response = await request(app)
+          .put(`/api/setting/${setting.id + 1}`)
+          .set("Authorization", `Bearer ${token}`)
+          .send({ theme: theme.DARK, rpe: false });
+
+        expect(response.status).toBe(404);
+        expect(response.body.message).toEqual("Setting not found");
       });
     });
   });
