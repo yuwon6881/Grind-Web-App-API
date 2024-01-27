@@ -2,12 +2,12 @@ import app from "../server";
 import { user } from "./testData";
 import { Response } from "supertest";
 
-const request = require("supertest");
+import request from "supertest";
 
 let token: string;
 
 beforeEach(async () => {
-  const response: Response = await request(app).post("/user").send(user);
+  const response: Response = await request(app).post("/register").send(user);
   token = response.body.token;
 });
 

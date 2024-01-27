@@ -1,4 +1,4 @@
-post http://localhost:8000/user
+post http://localhost:8000/register
 Content-Type: application/json
 
 {
@@ -20,8 +20,8 @@ Content-Type: application/json
 get http://localhost:8000/
 
 ###
-get http://localhost:8000/api/folders
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE3YjczZWYwLTc3ODctNDA5NS1iNWE3LWU5ZjlhZmZmZDc0ZSIsImVtYWlsIjoidGVzdFVzZXIyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzA1NDkxODQ1fQ.p-u1HXXabYXvs4jOHyFy5lFCkJuY_pKKCKnr5tZVZJY
+get http://localhost:8000/api/routines
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNhNGFlOWRkLTRhMDgtNDk1MS04MGRkLWQ1MGY2YzAyZDU0MCIsImVtYWlsIjoidGVzdFVzZXIyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzA2MzM5NjQ4fQ.5b8awP0KMz0LScU2iMn6Zhccgts93U9bM-kbFZuOW-E
 
 
 ###

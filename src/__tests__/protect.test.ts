@@ -1,6 +1,6 @@
 import app from "../server";
 import { Response } from "supertest";
-const request = require("supertest");
+import request from "supertest";
 
 describe("protect middleware", () => {
   describe("when no token is provided", () => {

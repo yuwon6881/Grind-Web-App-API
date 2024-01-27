@@ -1,7 +1,7 @@
 import prisma from "../db";
 import { NextFunction, Request, Response } from "express";
 import { comparePasswords, createJWT, hashPassword } from "../modules/auth";
-import { Settings, User } from "@prisma/client";
+import { Folder, Settings, User } from "@prisma/client";
 
 //Create New User
 
@@ -11,28 +11,38 @@ export const createNewUser = async (
   next: NextFunction,
 ) => {
   try {
-    const [user, setting]: [User, Settings] = await prisma.$transaction(
-      async (prisma): Promise<[User, Settings]> => {
-        let newUser: User, newSetting: Settings;
+    const [user, setting, folder]: [User, Settings, Folder] =
+      await prisma.$transaction(
+        async (prisma): Promise<[User, Settings, Folder]> => {
+          // Updated type annotation
+          let newUser: User, newSetting: Settings, defaultFolder: Folder;
 
-        newUser = await prisma.user.create({
-          data: {
-            name: req.body.name,
-            email: req.body.email,
-            password: await hashPassword(req.body.password),
-          },
-        });
+          newUser = await prisma.user.create({
+            data: {
+              name: req.body.name,
+              email: req.body.email,
+              password: await hashPassword(req.body.password),
+            },
+          });
 
-        newSetting = await prisma.settings.create({
-          data: {
-            user_id: newUser.id,
-          },
-        });
+          newSetting = await prisma.settings.create({
+            data: {
+              user_id: newUser.id,
+            },
+          });
 
-        return [newUser, newSetting];
-      },
-    );
-    if (user && setting) {
+          defaultFolder = await prisma.folder.create({
+            data: {
+              name: "SystemDefault",
+              user_id: newUser.id,
+              index: -1,
+            },
+          });
+
+          return [newUser, newSetting, defaultFolder];
+        },
+      );
+    if (user && setting && folder) {
       const token = createJWT(user);
       res.json({ token });
     }

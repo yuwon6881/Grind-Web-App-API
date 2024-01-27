@@ -1,8 +1,8 @@
 import { prismaMock } from "../../singleton";
-import { Role, theme, weightUnit, previousWorkoutValue } from "@prisma/client";
 import { createNewUser, deleteUser, signIn } from "../user";
 import { comparePasswords } from "../../modules/auth";
 import { request, response, next } from "./mocks";
+import { user, settings, signInData, folder } from "./mockData";
 
 jest.mock("../../modules/auth", () => ({
   hashPassword: jest.fn().mockResolvedValue("hashedPassword"),
@@ -10,40 +10,15 @@ jest.mock("../../modules/auth", () => ({
   createJWT: jest.fn().mockReturnValue("token"),
 }));
 
-// Test data
-const user = {
-  id: "1",
-  name: "test",
-  email: "test@test.com",
-  password: "test",
-  createdAt: new Date(),
-  profilePicture: null,
-  role: Role.USER,
-};
-
-const settings = {
-  id: "1",
-  theme: theme.LIGHT,
-  weightUnit: weightUnit.KG,
-  rpe: true,
-  previousWorkoutValue: previousWorkoutValue.Default,
-  user_id: "1",
-};
-
-const signInData = {
-  email: "test@test.com",
-  password: "test",
-};
-
 // Tests
-
 describe("createNewUser", () => {
   describe("when request is valid", () => {
     it("should return a user", async () => {
       request.body = user;
       prismaMock.user.create.mockResolvedValue(user);
       prismaMock.settings.create.mockResolvedValue(settings);
-      prismaMock.$transaction.mockResolvedValue([user, settings]);
+      prismaMock.folder.create.mockResolvedValue(folder);
+      prismaMock.$transaction.mockResolvedValue([user, settings, folder]);
       await createNewUser(request, response, next);
 
       expect(response.json).toHaveBeenCalledWith(

@@ -7,6 +7,7 @@ module.exports = {
   testPathIgnorePatterns: [
     "<rootDir>/node_modules/",
     "<rootDir>/src/handlers/__tests__/mocks.ts",
+    "<rootDir>/src/handlers/__tests__/mockData.ts",
     "<rootDir>/src/__tests__",
   ],
 };

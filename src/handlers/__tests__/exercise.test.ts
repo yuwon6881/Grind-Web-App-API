@@ -5,24 +5,8 @@ import {
   createExercise,
   deleteExercise,
 } from "../exercise";
-import { Exercise, exerciseType } from "@prisma/client";
 import { request, response, next } from "./mocks";
-
-// Test data
-const exercises: Exercise[] = [
-  {
-    id: "1",
-    name: "exercise1",
-    exerciseType: exerciseType.MACHINE,
-    image: null,
-  },
-  {
-    id: "2",
-    name: "exercise2",
-    exerciseType: exerciseType.BARBELL,
-    image: null,
-  },
-];
+import { exercises } from "./mockData";
 
 // Tests
 describe("getExercises", () => {

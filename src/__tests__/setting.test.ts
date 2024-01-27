@@ -3,14 +3,14 @@ import { user } from "./testData";
 import { Response } from "supertest";
 import prisma from "../db";
 import { Settings, theme } from "@prisma/client";
-const request = require("supertest");
+import request from "supertest";
 
 describe("Setting Endpoints", () => {
   let token: string;
   let setting: Settings;
 
   beforeEach(async () => {
-    const response: Response = await request(app).post("/user").send(user);
+    const response: Response = await request(app).post("/register").send(user);
     token = response.body.token;
     const userWithSettings = await prisma.user.findUnique({
       where: {

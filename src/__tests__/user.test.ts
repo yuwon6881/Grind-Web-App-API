@@ -2,13 +2,15 @@ import app from "../server";
 import { Response } from "supertest";
 import { user, signInUser } from "./testData";
 
-const request = require("supertest");
+import request from "supertest";
 
 describe("User Endpoints", () => {
-  describe("POST /user", () => {
+  describe("POST /register", () => {
     describe("when request is valid", () => {
       it("should return a token", async () => {
-        const response: Response = await request(app).post("/user").send(user);
+        const response: Response = await request(app)
+          .post("/register")
+          .send(user);
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty("token");
         expect(typeof response.body.token).toBe("string");
@@ -16,8 +18,10 @@ describe("User Endpoints", () => {
     });
     describe("when email is already taken", () => {
       it("should return an error", async () => {
-        await request(app).post("/user").send(user);
-        const response: Response = await request(app).post("/user").send(user);
+        await request(app).post("/register").send(user);
+        const response: Response = await request(app)
+          .post("/register")
+          .send(user);
         expect(response.status).toBe(400);
         expect(response.body).toMatchObject({
           message: "Email already exists",
@@ -27,7 +31,7 @@ describe("User Endpoints", () => {
     describe("when no email is provided", () => {
       it("should return an error", async () => {
         const response: Response = await request(app)
-          .post("/user")
+          .post("/register")
           .send({ ...user, email: null });
         expect(response.status).toBe(400);
         expect(response.body.errors).toEqual(
@@ -44,7 +48,7 @@ describe("User Endpoints", () => {
     describe("when no password is provided", () => {
       it("should return an error", async () => {
         const response: Response = await request(app)
-          .post("/user")
+          .post("/register")
           .send({ ...user, password: null });
         expect(response.status).toBe(400);
         expect(response.body.errors).toEqual(
@@ -61,7 +65,7 @@ describe("User Endpoints", () => {
     describe("when no name is provided", () => {
       it("should return an error", async () => {
         const response: Response = await request(app)
-          .post("/user")
+          .post("/register")
           .send({ ...user, name: null });
         expect(response.status).toBe(400);
         expect(response.body.errors).toEqual(
@@ -79,7 +83,7 @@ describe("User Endpoints", () => {
   describe("POST /signIn", () => {
     beforeEach(async () => {
       //create user
-      await request(app).post("/user").send(user);
+      await request(app).post("/register").send(user);
     });
     describe("when request is valid", () => {
       it("should return a token", async () => {
@@ -152,7 +156,9 @@ describe("User Endpoints", () => {
     let token: string;
     beforeEach(async () => {
       //create user
-      const response: Response = await request(app).post("/user").send(user);
+      const response: Response = await request(app)
+        .post("/register")
+        .send(user);
       token = response.body.token;
     });
     describe("when request is valid", () => {

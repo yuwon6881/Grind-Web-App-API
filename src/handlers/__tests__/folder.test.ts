@@ -1,38 +1,7 @@
 import { prismaMock } from "../../singleton";
 import { getFolders, createFolder, deleteFolder } from "../folder";
-import { Folder, User, Role } from "@prisma/client";
 import { request, response, next } from "./mocks";
-
-// Test data
-const folders: Folder[] = [
-  {
-    id: "1",
-    name: "folder1",
-    index: 1,
-    user_id: "1",
-  },
-  {
-    id: "2",
-    name: "folder2",
-    index: 2,
-    user_id: "1",
-  },
-];
-
-const user: User = {
-  id: "1",
-  createdAt: new Date(),
-  name: "test",
-  email: "test@test.com",
-  password: "password",
-  profilePicture: null,
-  role: Role.USER,
-};
-
-const userFolder: User & { Folder: Folder[] } = {
-  ...user,
-  Folder: folders,
-};
+import { folders, userFolder, user } from "./mockData";
 
 // Tests
 describe("getFolders", () => {

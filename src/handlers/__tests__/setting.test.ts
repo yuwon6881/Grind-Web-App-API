@@ -1,17 +1,7 @@
 import { prismaMock } from "../../singleton";
-import { theme, weightUnit, previousWorkoutValue } from "@prisma/client";
 import { getSetting, updateSetting } from "../setting";
 import { request, response, next } from "./mocks";
-
-// Test data
-const settings = {
-  id: "1",
-  theme: theme.LIGHT,
-  weightUnit: weightUnit.KG,
-  rpe: true,
-  previousWorkoutValue: previousWorkoutValue.Default,
-  user_id: "1",
-};
+import { settings } from "./mockData";
 
 // Tests
 describe("getSetting", () => {

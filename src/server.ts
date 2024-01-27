@@ -23,7 +23,7 @@ app.get("/", (req: Request, res: Response, next: NextFunction): void => {
 
 app.use("/api", protect, router);
 
-app.post("/user", validateUserRegisterInput, createNewUser);
+app.post("/register", validateUserRegisterInput, createNewUser);
 app.post("/signIn", validateUserSignInInput, signIn);
 
 app.use(errorHandler);
