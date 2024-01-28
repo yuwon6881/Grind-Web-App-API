@@ -15,7 +15,7 @@ export const getSetting = async (
       },
     });
     if (!setting) {
-      let error = new Error();
+      const error = new Error();
       error.message = "Setting not found";
       error.name = "inputError";
       throw error;

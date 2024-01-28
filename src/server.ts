@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Request, Response } from "express";
 import router from "./router";
 import morgan from "morgan";
 import { protect } from "./modules/auth";
@@ -17,7 +17,7 @@ app.use(morgan("dev", { skip: () => process.env.NODE_ENV === "test" }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req: Request, res: Response, next: NextFunction): void => {
+app.get("/", (req: Request, res: Response): void => {
   res.json({ message: "Hello World" });
 });
 

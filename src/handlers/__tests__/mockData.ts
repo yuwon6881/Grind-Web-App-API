@@ -8,7 +8,15 @@ import {
   weightUnit,
   previousWorkoutValue,
   Routine,
+  Workout,
+  status,
+  Prisma,
 } from "@prisma/client";
+
+type MockFolder = Prisma.FolderGetPayload<{
+  include: { Routine: { include: { Workout: true } } };
+}>;
+
 export const folders: Folder[] = [
   {
     id: "1",
@@ -86,3 +94,30 @@ export const settings = {
   previousWorkoutValue: previousWorkoutValue.Default,
   user_id: "1",
 };
+
+export const workout: Workout = {
+  id: "1",
+  start_date: new Date(),
+  end_date: null,
+  duration: null,
+  status: status.IN_PROGRESS,
+  routine_id: routine.id,
+};
+
+export const nestedFolders: MockFolder[] = [
+  {
+    id: "1",
+    name: "folder1",
+    index: 0,
+    user_id: "1",
+    Routine: [
+      {
+        id: "1",
+        name: "routine1",
+        index: 0,
+        folder_id: "1",
+        Workout: [workout],
+      },
+    ],
+  },
+];

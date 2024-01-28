@@ -16,6 +16,7 @@ import { validateRoutineInput } from "./middlewares/validateRoutineInput";
 import { validateRoutineExerciseInput } from "./middlewares/validateRoutineExerciseInput";
 import { validateWorkoutInput } from "./middlewares/validateWorkoutInput";
 import { createRoutine, deleteRoutine, getRoutines } from "./handlers/routines";
+import { deleteWorkout, getWorkouts } from "./handlers/workout";
 
 const router = Router();
 
@@ -57,8 +58,8 @@ router.put(
 router.delete("/routine/:routine_id/exercise/:exercise_id", (): void => {});
 
 // workout
-router.get("/workouts", (): void => {});
-router.delete("/workout/:id", (): void => {});
+router.get("/workouts", getWorkouts);
+router.delete("/workout/:id", deleteWorkout);
 
 // routine_workout
 router.get("/routine/:id/workouts", (): void => {});
