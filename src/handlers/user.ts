@@ -14,10 +14,7 @@ export const createNewUser = async (
     const [user, setting, folder]: [User, Settings, Folder] =
       await prisma.$transaction(
         async (prisma): Promise<[User, Settings, Folder]> => {
-          // Updated type annotation
-          let newUser: User, newSetting: Settings, defaultFolder: Folder;
-
-          newUser = await prisma.user.create({
+          const newUser: User = await prisma.user.create({
             data: {
               name: req.body.name,
               email: req.body.email,
@@ -25,13 +22,13 @@ export const createNewUser = async (
             },
           });
 
-          newSetting = await prisma.settings.create({
+          const newSetting: Settings = await prisma.settings.create({
             data: {
               user_id: newUser.id,
             },
           });
 
-          defaultFolder = await prisma.folder.create({
+          const defaultFolder: Folder = await prisma.folder.create({
             data: {
               name: "SystemDefault",
               user_id: newUser.id,

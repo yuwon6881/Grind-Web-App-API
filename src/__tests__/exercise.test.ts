@@ -72,6 +72,28 @@ describe("Exercise Endpoints", () => {
         expect(response.body.data).toMatchObject(exercise);
       });
     });
+    describe("when name is missing from the body", () => {
+      it("should return error", async () => {
+        const response: Response = await request(app)
+          .post("/api/exercise")
+          .set("Authorization", `Bearer ${token}`)
+          .send({ exercise_type: "test" });
+
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty("errors");
+      });
+    });
+    describe("when exercise type is missing from the body", () => {
+      it("should return error", async () => {
+        const response: Response = await request(app)
+          .post("/api/exercise")
+          .set("Authorization", `Bearer ${token}`)
+          .send({ name: "test" });
+
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty("errors");
+      });
+    });
   });
   describe("DELETE /exercise/id", () => {
     let exerciseId: string;

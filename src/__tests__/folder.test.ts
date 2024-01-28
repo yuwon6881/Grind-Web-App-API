@@ -38,6 +38,17 @@ describe("Folder Endpoints", () => {
         });
       });
     });
+    describe("when name is missing from the body", () => {
+      it("should return error", async () => {
+        const response: Response = await request(app)
+          .post("/api/folder")
+          .set("Authorization", `Bearer ${token}`)
+          .send({});
+
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty("errors");
+      });
+    });
   });
   describe("DELETE /folder/id", () => {
     let folderId: number;

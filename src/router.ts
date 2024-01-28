@@ -15,7 +15,7 @@ import { errorHandler } from "./middlewares/errorhandler";
 import { validateRoutineInput } from "./middlewares/validateRoutineInput";
 import { validateRoutineExerciseInput } from "./middlewares/validateRoutineExerciseInput";
 import { validateWorkoutInput } from "./middlewares/validateWorkoutInput";
-import { getRoutines } from "./handlers/routines";
+import { createRoutine, deleteRoutine, getRoutines } from "./handlers/routines";
 
 const router = Router();
 
@@ -39,8 +39,8 @@ router.delete("/folder/:id", deleteFolder);
 
 // routines
 router.get("/routines", getRoutines);
-router.post("/routine", validateRoutineInput, (): void => {});
-router.delete("/routine/:id", (): void => {});
+router.post("/routine", validateRoutineInput, createRoutine);
+router.delete("/routine/:id", deleteRoutine);
 
 // routine_exercise
 router.get("/routine/:id/exercises", (): void => {});
