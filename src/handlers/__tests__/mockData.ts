@@ -17,6 +17,14 @@ type MockFolder = Prisma.FolderGetPayload<{
   include: { Routine: { include: { Workout: true } } };
 }>;
 
+type MockRoutine = Prisma.RoutineGetPayload<{
+  include: { Workout: true };
+}>;
+
+type MockFolderRoutine = Prisma.FolderGetPayload<{
+  include: { Routine: true };
+}>;
+
 export const folders: Folder[] = [
   {
     id: "1",
@@ -119,5 +127,19 @@ export const nestedFolders: MockFolder[] = [
         Workout: [workout],
       },
     ],
+  },
+];
+
+export const nestedWorkouts: MockRoutine[] = [
+  {
+    ...routine,
+    Workout: [workout],
+  },
+];
+
+export const nestedFoldersRoutines: MockFolderRoutine[] = [
+  {
+    ...folder,
+    Routine: [routine],
   },
 ];

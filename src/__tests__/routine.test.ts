@@ -13,54 +13,6 @@ beforeEach(async () => {
 });
 
 describe("Routine Endpoints", () => {
-  describe("GET /routines", () => {
-    describe("when request is valid", () => {
-      it("should return a list of routines", async () => {
-        const response: Response = await request(app)
-          .get("/api/routines")
-          .set("Authorization", `Bearer ${token}`);
-
-        expect(response.status).toBe(200);
-        expect(response.body).toHaveProperty("data");
-      });
-    });
-  });
-  describe("POST /routine", () => {
-    describe("when request is valid", () => {
-      it("should return a routine", async () => {
-        const folder = await prisma.folder.findMany();
-        const response: Response = await request(app)
-          .post("/api/routine")
-          .send({ name: "test", folder_id: folder[0].id })
-          .set("Authorization", `Bearer ${token}`);
-
-        expect(response.status).toBe(200);
-        expect(response.body).toHaveProperty("data");
-      });
-    });
-    describe("when name is missing from the body", () => {
-      it("should return error", async () => {
-        const response: Response = await request(app)
-          .post("/api/routine")
-          .send({ folder_id: 1 })
-          .set("Authorization", `Bearer ${token}`);
-
-        expect(response.status).toBe(400);
-        expect(response.body).toHaveProperty("errors");
-      });
-    });
-    describe("when folder_id is missing from the body", () => {
-      it("should return error", async () => {
-        const response: Response = await request(app)
-          .post("/api/routine")
-          .send({ name: "test" })
-          .set("Authorization", `Bearer ${token}`);
-
-        expect(response.status).toBe(400);
-        expect(response.body).toHaveProperty("errors");
-      });
-    });
-  });
   describe("DELETE /routine/:id", () => {
     let routine: Routine;
     beforeEach(async () => {
