@@ -12,10 +12,7 @@ import { validateSettingInput } from "./middlewares/validateSettingInput";
 import { getSetting, updateSetting } from "./handlers/setting";
 import { deleteUser } from "./handlers/user";
 import { errorHandler } from "./middlewares/errorhandler";
-import {
-  validateFolderRoutineInput,
-  validateFolderRoutineUpdateInput,
-} from "./middlewares/validateFolderRoutineInput";
+import { validateFolderRoutineInput } from "./middlewares/validateFolderRoutineInput";
 import { validateRoutineExerciseInput } from "./middlewares/validateRoutineExerciseInput";
 import { deleteRoutine } from "./handlers/routines";
 import { createRoutine, getRoutine } from "./handlers/folder_routines";
