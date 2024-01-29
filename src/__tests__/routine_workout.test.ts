@@ -20,7 +20,7 @@ describe("RoutineWorkout Endpoints", () => {
       },
     });
   });
-  describe("GET /routines/:id/workouts", () => {
+  describe("GET /api/routines/:id/workouts", () => {
     describe("when request is valid", () => {
       it("should return list of workouts for the routine", async () => {
         const response = await request(app)
@@ -32,7 +32,7 @@ describe("RoutineWorkout Endpoints", () => {
       });
     });
   });
-  describe("POST /routines/:id/workouts", () => {
+  describe("POST /api/routines/:id/workouts", () => {
     describe("when request is valid", () => {
       it("should create a workout for the routine", async () => {
         const response = await request(app)

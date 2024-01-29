@@ -12,7 +12,7 @@ beforeEach(async () => {
 });
 
 describe("Folder Endpoints", () => {
-  describe("GET /folders", () => {
+  describe("GET /api/folders", () => {
     describe("when request is valid", () => {
       it("should return a list of folders", async () => {
         const response: Response = await request(app)
@@ -24,7 +24,7 @@ describe("Folder Endpoints", () => {
       });
     });
   });
-  describe("POST /folder", () => {
+  describe("POST /api/folder", () => {
     describe("when request is valid", () => {
       it("should create a folder", async () => {
         const response: Response = await request(app)
@@ -50,7 +50,7 @@ describe("Folder Endpoints", () => {
       });
     });
   });
-  describe("DELETE /folder/id", () => {
+  describe("DELETE /api/folder/id", () => {
     let folderId: number;
     beforeEach(async () => {
       const response: Response = await request(app)

@@ -22,7 +22,7 @@ describe("Setting Endpoints", () => {
     });
     setting = userWithSettings!.Settings!;
   });
-  describe("GET /setting/id", () => {
+  describe("GET /api/setting/id", () => {
     describe("when request is valid", () => {
       it("should return a setting", async () => {
         const response: Response = await request(app)
@@ -42,7 +42,7 @@ describe("Setting Endpoints", () => {
       });
     });
   });
-  describe("UPDATE /setting/id", () => {
+  describe("UPDATE /api/setting/id", () => {
     describe("when request is valid", () => {
       it("should update a setting", async () => {
         const response: Response = await request(app)

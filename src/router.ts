@@ -12,7 +12,10 @@ import { validateSettingInput } from "./middlewares/validateSettingInput";
 import { getSetting, updateSetting } from "./handlers/setting";
 import { deleteUser } from "./handlers/user";
 import { errorHandler } from "./middlewares/errorhandler";
-import { validateRoutineInput } from "./middlewares/validateRoutineInput";
+import {
+  validateFolderRoutineInput,
+  validateFolderRoutineUpdateInput,
+} from "./middlewares/validateFolderRoutineInput";
 import { validateRoutineExerciseInput } from "./middlewares/validateRoutineExerciseInput";
 import { deleteRoutine } from "./handlers/routines";
 import { createRoutine, getRoutine } from "./handlers/folder_routines";
@@ -21,6 +24,7 @@ import {
   createRoutineWorkouts,
   getRoutineWorkouts,
 } from "./handlers/routine_workout";
+import { getRoutineExercises } from "./handlers/routine_exercise";
 
 const router = Router();
 
@@ -47,21 +51,24 @@ router.delete("/routine/:id", deleteRoutine);
 
 //folder_routines
 router.get("/folder/:id/routines", getRoutine);
-router.post("/folder/:id/routine", validateRoutineInput, createRoutine);
+router.post("/folder/:id/routine", validateFolderRoutineInput, createRoutine);
 
 // routine_exercise
-router.get("/routine/:id/exercises", (): void => {});
+//add or delete exercises includes custom exercises
+router.get("/routine/:id/exercises", getRoutineExercises);
 router.post(
   "/routine/:id/exercise",
   validateRoutineExerciseInput,
   (): void => {},
 );
-router.put(
-  "/routine/:routine_id/exercise/:exercise_id",
-  validateRoutineExerciseInput,
-  (): void => {},
-);
 router.delete("/routine/:routine_id/exercise/:exercise_id", (): void => {});
+
+// Routine_Set
+
+// workout_exercise
+//add or delete exercises includes custom exercises
+
+// workout_set
 
 // workout
 router.get("/workouts", getWorkouts);

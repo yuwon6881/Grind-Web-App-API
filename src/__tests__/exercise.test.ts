@@ -16,7 +16,7 @@ beforeEach(async () => {
 });
 
 describe("Exercise Endpoints", () => {
-  describe("GET /exercises", () => {
+  describe("GET /api/exercises", () => {
     describe("when request is valid", () => {
       it("should return an exercise", async () => {
         const response: Response = await request(app)
@@ -30,7 +30,7 @@ describe("Exercise Endpoints", () => {
       });
     });
   });
-  describe("GET /exercise/id", () => {
+  describe("GET /api/exercise/id", () => {
     let exerciseId: string;
     beforeEach(async () => {
       const response: Response = await request(app)
@@ -60,7 +60,7 @@ describe("Exercise Endpoints", () => {
       });
     });
   });
-  describe("POST /exercise", () => {
+  describe("POST /api/exercise", () => {
     describe("when request is valid", () => {
       it("should create an exercise", async () => {
         const response: Response = await request(app)
@@ -95,7 +95,7 @@ describe("Exercise Endpoints", () => {
       });
     });
   });
-  describe("DELETE /exercise/id", () => {
+  describe("DELETE /api/exercise/id", () => {
     let exerciseId: string;
     beforeEach(async () => {
       const response: Response = await request(app)

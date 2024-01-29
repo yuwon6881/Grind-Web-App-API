@@ -11,6 +11,7 @@ import {
   Workout,
   status,
   Prisma,
+  Custom_Exercise,
 } from "@prisma/client";
 
 type MockFolder = Prisma.FolderGetPayload<{
@@ -23,6 +24,21 @@ type MockRoutine = Prisma.RoutineGetPayload<{
 
 type MockFolderRoutine = Prisma.FolderGetPayload<{
   include: { Routine: true };
+}>;
+
+type MockRoutineExercise = Prisma.RoutineGetPayload<{
+  include: {
+    Routine_Exercise: {
+      include: {
+        Exercise: true;
+      };
+    };
+    Routine_Custom_Exercise: {
+      include: {
+        Custom_Exercise: true;
+      };
+    };
+  };
 }>;
 
 export const folders: Folder[] = [
@@ -112,6 +128,14 @@ export const workout: Workout = {
   routine_id: routine.id,
 };
 
+export const custom_exercise: Custom_Exercise = {
+  id: "1",
+  name: "custom_exercise1",
+  image: null,
+  exerciseType: exerciseType.BARBELL,
+  user_id: user.id,
+};
+
 export const nestedFolders: MockFolder[] = [
   {
     id: "1",
@@ -141,5 +165,39 @@ export const nestedFoldersRoutines: MockFolderRoutine[] = [
   {
     ...folder,
     Routine: [routine],
+  },
+];
+
+export const nestedRoutineExercises: MockRoutineExercise[] = [
+  {
+    ...routine,
+    Routine_Exercise: [
+      {
+        routine_id: "1",
+        exercise_id: "1",
+        index: 0,
+        rest_timer: 0,
+        note: "note1",
+        Exercise: exercises[0],
+      },
+      {
+        routine_id: "1",
+        exercise_id: "1",
+        index: 0,
+        rest_timer: 0,
+        note: "note2",
+        Exercise: exercises[1],
+      },
+    ],
+    Routine_Custom_Exercise: [
+      {
+        routine_id: "1",
+        custom_exercise_id: "1",
+        index: 0,
+        rest_timer: 0,
+        note: "note1",
+        Custom_Exercise: custom_exercise,
+      },
+    ],
   },
 ];

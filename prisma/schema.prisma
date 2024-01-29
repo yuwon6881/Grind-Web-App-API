@@ -192,22 +192,21 @@ model Custom_Exercise {
   Routine_Set                   Routine_Set[]
   Workout_Custom_Exercise       Workout_Custom_Exercise[]
   Workout_Superset              Workout_Superset[]
-  workout_SupersetId            String?
   Workout_Sets                  Workout_Sets[]
 }
 
 model Exercise {
-  id                 String             @id @default(uuid())
-  name               String
-  image              Bytes?
-  exerciseType       exerciseType
-  Routine_Superset   Routine_Superset[]
-  Exercise_Muscle    Exercise_Muscle[]
-  Routine_Exercise   Routine_Exercise[]
-  Routine_Set        Routine_Set[]
-  Workout_Exercise   Workout_Exercise[]
-  Workout_Superset   Workout_Superset[]
-  Workout_Sets       Workout_Sets[]
+  id               String             @id @default(uuid())
+  name             String
+  image            Bytes?
+  exerciseType     exerciseType
+  Routine_Superset Routine_Superset[]
+  Exercise_Muscle  Exercise_Muscle[]
+  Routine_Exercise Routine_Exercise[]
+  Routine_Set      Routine_Set[]
+  Workout_Exercise Workout_Exercise[]
+  Workout_Superset Workout_Superset[]
+  Workout_Sets     Workout_Sets[]
 }
 
 model Routine_Custom_Exercise {

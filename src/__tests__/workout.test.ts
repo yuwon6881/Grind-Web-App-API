@@ -11,7 +11,7 @@ beforeEach(async () => {
 });
 
 describe("Workout Endpoints", () => {
-  describe("GET /workouts", () => {
+  describe("GET /api/workouts", () => {
     describe("when request is valid", () => {
       it("should return workouts", async () => {
         const response = await request(app)
@@ -23,7 +23,7 @@ describe("Workout Endpoints", () => {
       });
     });
   });
-  describe("DELETE /workout/:id", () => {
+  describe("DELETE /api/workout/:id", () => {
     let workout: Workout;
     beforeEach(async () => {
       const folder: Folder[] = await prisma.folder.findMany();

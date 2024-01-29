@@ -13,7 +13,7 @@ beforeEach(async () => {
 });
 
 describe("Routine Endpoints", () => {
-  describe("DELETE /routine/:id", () => {
+  describe("DELETE /api/routine/:id", () => {
     let routine: Routine;
     beforeEach(async () => {
       const existedFolder: Folder[] = await prisma.folder.findMany();

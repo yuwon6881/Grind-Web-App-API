@@ -17,7 +17,7 @@ describe("folder_routines Endpoints", () => {
   beforeEach(async () => {
     folder = await prisma.folder.findMany();
   });
-  describe("POST /routine", () => {
+  describe("POST /api/routine", () => {
     describe("when request is valid", () => {
       it("should return a routine", async () => {
         const response: Response = await request(app)
@@ -41,7 +41,7 @@ describe("folder_routines Endpoints", () => {
       });
     });
   });
-  describe("GET /folder/:id/routines", () => {
+  describe("GET /api/folder/:id/routines", () => {
     describe("when request is valid", () => {
       it("should return a routine", async () => {
         const response: Response = await request(app)
