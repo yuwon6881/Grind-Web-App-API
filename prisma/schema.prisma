@@ -212,7 +212,7 @@ model Exercise {
 model Routine_Custom_Exercise {
   routine_id         String
   custom_exercise_id String
-  index              Int
+  index              Int             @default(0)
   rest_timer         Float?
   note               String?
   Routine            Routine         @relation(fields: [routine_id], references: [id], onDelete: Cascade)

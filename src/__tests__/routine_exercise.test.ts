@@ -4,6 +4,7 @@ import prisma from "../db";
 import {
   Custom_Exercise,
   Exercise,
+  Folder,
   Routine,
   exerciseType,
 } from "@prisma/client";
@@ -83,6 +84,73 @@ describe("Routine Exercise Endpoints", () => {
           .set("Authorization", `Bearer ${token}`);
         expect(response.status).toEqual(200);
         expect(response.body.data).toEqual([]);
+      });
+    });
+  });
+  describe("POST /api/routine/:routine_id/exercise/:exercise_id", () => {
+    let folder: Folder[],
+      createdRoutine: Routine,
+      createdExercise: Exercise,
+      createdCustom_exercise: Custom_Exercise;
+    beforeEach(async () => {
+      const user = await prisma.user.findFirst();
+      folder = await prisma.folder.findMany();
+      createdRoutine = await prisma.routine.create({
+        data: {
+          name: "test",
+          folder_id: folder[0].id,
+        },
+      });
+      createdExercise = await prisma.exercise.create({
+        data: {
+          name: "exercise1",
+          image: null,
+          exerciseType: exerciseType.MACHINE,
+        },
+      });
+      createdCustom_exercise = await prisma.custom_Exercise.create({
+        data: {
+          name: "custom_exercise1",
+          image: null,
+          exerciseType: exerciseType.BARBELL,
+          user_id: user!.id,
+        },
+      });
+    });
+    describe("when request is valid", () => {
+      it("should add an exercise to the routine", async () => {
+        const response = await request(app)
+          .post(
+            `/api/routine/${createdRoutine.id}/exercise/${createdExercise.id}`,
+          )
+          .set("Authorization", `Bearer ${token}`);
+        expect(response.status).toEqual(200);
+        expect(response.body).toHaveProperty("data");
+      });
+      it("should add a custom exercise to the routine", async () => {
+        const response = await request(app)
+          .post(
+            `/api/routine/${createdRoutine.id}/exercise/${createdCustom_exercise.id}`,
+          )
+          .set("Authorization", `Bearer ${token}`);
+        expect(response.status).toEqual(200);
+        expect(response.body).toHaveProperty("data");
+      });
+    });
+    describe("when request is invalid", () => {
+      it("should return routine not found error", async () => {
+        const response = await request(app)
+          .post(`/api/routine/wrongID/exercise/${createdExercise.id}`)
+          .set("Authorization", `Bearer ${token}`);
+        expect(response.status).toEqual(400);
+        expect(response.body.message).toEqual("Routine not found");
+      });
+      it("should return exercise not found error", async () => {
+        const response = await request(app)
+          .post(`/api/routine/${createdRoutine.id}/exercise/wrongID`)
+          .set("Authorization", `Bearer ${token}`);
+        expect(response.status).toEqual(400);
+        expect(response.body.message).toEqual("Exercise not found");
       });
     });
   });

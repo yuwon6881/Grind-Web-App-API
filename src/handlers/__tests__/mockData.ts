@@ -12,6 +12,8 @@ import {
   status,
   Prisma,
   Custom_Exercise,
+  Routine_Exercise,
+  Routine_Custom_Exercise,
 } from "@prisma/client";
 
 type MockFolder = Prisma.FolderGetPayload<{
@@ -26,7 +28,7 @@ type MockFolderRoutine = Prisma.FolderGetPayload<{
   include: { Routine: true };
 }>;
 
-type MockRoutineExercise = Prisma.RoutineGetPayload<{
+type MockRoutineExerciseAndCustomExercise = Prisma.RoutineGetPayload<{
   include: {
     Routine_Exercise: {
       include: {
@@ -168,7 +170,7 @@ export const nestedFoldersRoutines: MockFolderRoutine[] = [
   },
 ];
 
-export const nestedRoutineExercises: MockRoutineExercise[] = [
+export const nestedRoutineExercises: MockRoutineExerciseAndCustomExercise[] = [
   {
     ...routine,
     Routine_Exercise: [
@@ -201,3 +203,19 @@ export const nestedRoutineExercises: MockRoutineExercise[] = [
     ],
   },
 ];
+
+export const routine_exercise: Routine_Exercise = {
+  routine_id: routine.id,
+  exercise_id: exercises[0].id,
+  index: 0,
+  rest_timer: null,
+  note: null,
+};
+
+export const routine_custom_exercise: Routine_Custom_Exercise = {
+  routine_id: routine.id,
+  custom_exercise_id: custom_exercise.id,
+  index: 0,
+  rest_timer: null,
+  note: null,
+};
