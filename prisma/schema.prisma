@@ -247,7 +247,7 @@ model Routine_Set {
   reps               Int?
   rpe                Float?
   index              Int              @default(0)
-  exercise_type      set_type         @default(NORMAL)
+  set_type           set_type         @default(NORMAL)
   routine_id         String
   exercise_id        String?
   custom_exercise_id String?
