@@ -22,7 +22,6 @@ import {
 } from "./handlers/routine_workout";
 import {
   createRoutineExercise,
-  deleteRoutineExercise,
   getRoutineExercises,
 } from "./handlers/routine_exercise";
 import { validateRoutineExerciseInput } from "./middlewares/validateRoutineExerciseInput";
@@ -55,19 +54,12 @@ router.get("/folder/:id/routines", getRoutine);
 router.post("/folder/:id/routine", validateFolderRoutineInput, createRoutine);
 
 // routine_exercise
-//add or delete exercises includes custom exercises
 router.get("/routine/:id/exercises", getRoutineExercises);
 router.post(
   "/routine/:routine_id/exercises",
   validateRoutineExerciseInput,
   createRoutineExercise,
 );
-router.delete(
-  "/routine/:routine_id/exercise/:exercise_id",
-  deleteRoutineExercise,
-);
-
-// Routine_Set
 
 // workout_exercise
 //add or delete exercises includes custom exercises

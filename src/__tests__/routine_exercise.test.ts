@@ -206,38 +206,4 @@ describe("Routine Exercise Endpoints", () => {
       });
     });
   });
-  describe("DELETE /api/routine/:routine_id/exercise/:exercise_id", () => {
-    describe("when request is valid", () => {
-      it("should delete an exercise from the routine", async () => {
-        const response = await request(app)
-          .delete(`/api/routine/${routine.id}/exercise/${exercise.id}`)
-          .set("Authorization", `Bearer ${token}`);
-        expect(response.status).toEqual(200);
-        expect(response.body).toHaveProperty("data");
-      });
-      it("should delete a custom exercise from the routine", async () => {
-        const response = await request(app)
-          .delete(`/api/routine/${routine.id}/exercise/${custom_exercise.id}`)
-          .set("Authorization", `Bearer ${token}`);
-        expect(response.status).toEqual(200);
-        expect(response.body).toHaveProperty("data");
-      });
-    });
-    describe("when request is invalid", () => {
-      it("should return routine not found error", async () => {
-        const response = await request(app)
-          .delete(`/api/routine/wrongID/exercise/${exercise.id}`)
-          .set("Authorization", `Bearer ${token}`);
-        expect(response.status).toEqual(400);
-        expect(response.body.message).toEqual("Routine not found");
-      });
-      it("should return exercise not found error", async () => {
-        const response = await request(app)
-          .delete(`/api/routine/${routine.id}/exercise/wrongID`)
-          .set("Authorization", `Bearer ${token}`);
-        expect(response.status).toEqual(400);
-        expect(response.body.message).toEqual("Exercise not found");
-      });
-    });
-  });
 });
