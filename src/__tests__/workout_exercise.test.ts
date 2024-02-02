@@ -5,9 +5,10 @@ import {
   Custom_Exercise,
   Exercise,
   Routine,
+  Workout,
   exerciseType,
 } from "@prisma/client";
-import { addRoutineExerciseAndCustomExerciseWithSets, user } from "./testData";
+import { addWorkoutExerciseAndCustomExerciseWithSets, user } from "./testData";
 
 let token: string;
 beforeEach(async () => {
@@ -15,13 +16,18 @@ beforeEach(async () => {
   token = response.body.token;
 });
 
-describe("Routine Exercise Endpoints", () => {
-  let routine: Routine, exercise: Exercise, custom_exercise: Custom_Exercise;
+describe("Workout Exercise Endpoints", () => {
+  let routine: Routine,
+    exercise: Exercise,
+    custom_exercise: Custom_Exercise,
+    workout: Workout;
   beforeEach(async () => {
     const user = await prisma.user.findMany();
     const folder = await prisma.folder.findMany();
     await prisma.$transaction(
-      async (prisma): Promise<[Routine, Exercise, Custom_Exercise]> => {
+      async (
+        prisma,
+      ): Promise<[Routine, Exercise, Custom_Exercise, Workout]> => {
         routine = await prisma.routine.create({
           data: {
             name: "test",
@@ -44,33 +50,39 @@ describe("Routine Exercise Endpoints", () => {
           },
         });
 
-        await prisma.routine_Exercise.create({
+        workout = await prisma.workout.create({
           data: {
             routine_id: routine.id,
+          },
+        });
+        await prisma.workout_Exercise.create({
+          data: {
+            workout_id: workout.id,
             exercise_id: exercise.id,
             index: 0,
             rest_timer: 0,
             note: "note1",
           },
         });
-        await prisma.routine_Custom_Exercise.create({
+        await prisma.workout_Custom_Exercise.create({
           data: {
-            routine_id: routine.id,
+            workout_id: workout.id,
             custom_exercise_id: custom_exercise.id,
             index: 0,
             rest_timer: 0,
             note: "note1",
           },
         });
-        return [routine, exercise, custom_exercise];
+
+        return [routine, exercise, custom_exercise, workout];
       },
     );
   });
-  describe("GET /api/routines/:id/exercises", () => {
+  describe("GET /api/workouts/:id/exercises", () => {
     describe("when request is valid", () => {
-      it("should return a list of exercises from the routine", async () => {
+      it("should return a list of exercises from the workout", async () => {
         const response = await request(app)
-          .get(`/api/routine/${routine.id}/exercises`)
+          .get(`/api/workout/${workout.id}/exercises`)
           .set("Authorization", `Bearer ${token}`);
         expect(response.status).toEqual(200);
         expect(response.body.data).toEqual([exercise, custom_exercise]);
@@ -79,25 +91,25 @@ describe("Routine Exercise Endpoints", () => {
     describe("when request is invalid", () => {
       it("should return an empty array", async () => {
         const response = await request(app)
-          .get(`/api/routine/wrongID/exercises`)
+          .get(`/api/workout/wrongID/exercises`)
           .set("Authorization", `Bearer ${token}`);
         expect(response.status).toEqual(200);
         expect(response.body.data).toEqual([]);
       });
     });
   });
-  describe("POST /api/routine/:routine_id/exercises", () => {
+  describe("POST /api/workout/:workout_id/exercises", () => {
     beforeEach(async () => {
-      await prisma.routine_Exercise.deleteMany();
-      await prisma.routine_Custom_Exercise.deleteMany();
+      await prisma.workout_Exercise.deleteMany();
+      await prisma.workout_Custom_Exercise.deleteMany();
     });
     describe("when request is valid", () => {
-      it("should add exercises to the routine", async () => {
+      it("should add exercises to the workout", async () => {
         const response = await request(app)
-          .post(`/api/routine/${routine.id}/exercises`)
+          .post(`/api/workout/${workout.id}/exercises`)
           .set("Authorization", `Bearer ${token}`)
           .send(
-            addRoutineExerciseAndCustomExerciseWithSets(
+            addWorkoutExerciseAndCustomExerciseWithSets(
               exercise.id,
               custom_exercise.id,
             ),
@@ -106,77 +118,77 @@ describe("Routine Exercise Endpoints", () => {
         expect(response.body).toEqual({ data: "Success" });
 
         //check if exercises were added
-        const routine_exercises = await prisma.routine_Exercise.findMany({
+        const workout_exercises = await prisma.workout_Exercise.findMany({
           where: {
-            routine_id: routine.id,
+            workout_id: workout.id,
           },
         });
-        const routine_custom_exercises =
-          await prisma.routine_Custom_Exercise.findMany({
+        const workout_custom_exercises =
+          await prisma.workout_Custom_Exercise.findMany({
             where: {
-              routine_id: routine.id,
+              workout_id: workout.id,
             },
           });
-        const routine_set = await prisma.routine_Set.findMany({
+        const workout_set = await prisma.workout_Sets.findMany({
           where: {
-            routine_id: routine.id,
+            workout_id: workout.id,
           },
         });
-        expect(routine_exercises.length).toEqual(1);
-        expect(routine_custom_exercises.length).toEqual(1);
-        expect(routine_set.length).toEqual(3);
+        expect(workout_exercises.length).toEqual(1);
+        expect(workout_custom_exercises.length).toEqual(1);
+        expect(workout_set.length).toEqual(3);
       });
     });
     describe("when request is invalid", () => {
       it("should return body exercises is required", async () => {
         const response = await request(app)
-          .post(`/api/routine/${routine.id}/exercises`)
+          .post(`/api/workout/${workout.id}/exercises`)
           .set("Authorization", `Bearer ${token}`)
           .send({});
         expect(response.status).toEqual(400);
       });
-      it("should return routine not found error", async () => {
+      it("should return workout not found error", async () => {
         const response = await request(app)
-          .post(`/api/routine/wrongID/exercises`)
+          .post(`/api/workout/wrongID/exercises`)
           .set("Authorization", `Bearer ${token}`)
           .send(
-            addRoutineExerciseAndCustomExerciseWithSets(
+            addWorkoutExerciseAndCustomExerciseWithSets(
               exercise.id,
               custom_exercise.id,
             ),
           );
         expect(response.status).toEqual(400);
-        expect(response.body.message).toEqual("Routine not found");
+        expect(response.body.message).toEqual("Workout not found");
       });
-      it("should return error adding exercise to routine", async () => {
+      it("should return error adding exercise to workout", async () => {
         const response = await request(app)
-          .post(`/api/routine/${routine.id}/exercises`)
+          .post(`/api/workout/${workout.id}/exercises`)
           .set("Authorization", `Bearer ${token}`)
           .send(
-            addRoutineExerciseAndCustomExerciseWithSets("wrongID", "wrongID"),
+            addWorkoutExerciseAndCustomExerciseWithSets("wrongID", "wrongID"),
           );
         expect(response.status).toEqual(500);
         //check if transaction was rolled back
-        const routine_exercises = await prisma.routine_Exercise.findMany({
+        const workout_exercises = await prisma.workout_Exercise.findMany({
           where: {
-            routine_id: routine.id,
+            workout_id: workout.id,
           },
         });
-        const routine_custom_exercises =
-          await prisma.routine_Custom_Exercise.findMany({
+        const workout_custom_exercises =
+          await prisma.workout_Custom_Exercise.findMany({
             where: {
-              routine_id: routine.id,
+              workout_id: workout.id,
             },
           });
-        const routine_set = await prisma.routine_Set.findMany({
+        const workout_set = await prisma.workout_Sets.findMany({
           where: {
-            routine_id: routine.id,
+            workout_id: workout.id,
           },
         });
 
-        expect(routine_exercises.length).toEqual(0);
-        expect(routine_custom_exercises.length).toEqual(0);
-        expect(routine_set.length).toEqual(0);
+        expect(workout_exercises.length).toEqual(0);
+        expect(workout_custom_exercises.length).toEqual(0);
+        expect(workout_set.length).toEqual(0);
       });
     });
   });

@@ -25,6 +25,11 @@ import {
   getRoutineExercises,
 } from "./handlers/routine_exercise";
 import { validateRoutineExerciseInput } from "./middlewares/validateRoutineExerciseInput";
+import {
+  createWorkoutExercise,
+  getWorkoutExercises,
+} from "./handlers/workout_exercise";
+import { validateWorkoutExerciseInput } from "./middlewares/validateWorkoutExerciseInput";
 
 const router = Router();
 
@@ -40,6 +45,12 @@ router.get("/exercises", getExercises);
 router.get("/exercise/:id", getExercise);
 router.post("/exercise", validateExerciseInput, createExercise);
 router.delete("/exercise/:id", deleteExercise);
+
+// custom_exercises
+router.get("/custom-exercises", () => {});
+router.get("/custom-exercise/:id", () => {});
+router.post("/custom-exercise", validateExerciseInput, () => {});
+router.delete("/custom-exercise/:id", () => {});
 
 // folders
 router.get("/folders", getFolders);
@@ -61,13 +72,17 @@ router.post(
   createRoutineExercise,
 );
 
-// workout_exercise
-//add or delete exercises includes custom exercises
-
-// workout_set
+// workout_exercises
+router.get("/workout/:id/exercises", getWorkoutExercises);
+router.post(
+  "/workout/:id/exercises",
+  validateWorkoutExerciseInput,
+  createWorkoutExercise,
+);
 
 // workout
 router.get("/workouts", getWorkouts);
+// router.put("/workout/:id", () => {});
 router.delete("/workout/:id", deleteWorkout);
 
 // routine_workout

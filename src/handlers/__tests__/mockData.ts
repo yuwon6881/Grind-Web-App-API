@@ -43,6 +43,21 @@ type MockRoutineExerciseAndCustomExercise = Prisma.RoutineGetPayload<{
   };
 }>;
 
+type MockWorkoutExerciseAndCustomExercise = Prisma.WorkoutGetPayload<{
+  include: {
+    Workout_Exercise: {
+      include: {
+        Exercise: true;
+      };
+    };
+    Workout_Custom_Exercise: {
+      include: {
+        Custom_Exercise: true;
+      };
+    };
+  };
+}>;
+
 export const folders: Folder[] = [
   {
     id: "1",
@@ -194,6 +209,40 @@ export const nestedRoutineExercises: MockRoutineExerciseAndCustomExercise[] = [
     Routine_Custom_Exercise: [
       {
         routine_id: "1",
+        custom_exercise_id: "1",
+        index: 0,
+        rest_timer: 0,
+        note: "note1",
+        Custom_Exercise: custom_exercise,
+      },
+    ],
+  },
+];
+
+export const nestedWorkoutExercises: MockWorkoutExerciseAndCustomExercise[] = [
+  {
+    ...workout,
+    Workout_Exercise: [
+      {
+        workout_id: "1",
+        exercise_id: "1",
+        index: 0,
+        rest_timer: 0,
+        note: "note1",
+        Exercise: exercises[0],
+      },
+      {
+        workout_id: "1",
+        exercise_id: "1",
+        index: 0,
+        rest_timer: 0,
+        note: "note2",
+        Exercise: exercises[1],
+      },
+    ],
+    Workout_Custom_Exercise: [
+      {
+        workout_id: "1",
         custom_exercise_id: "1",
         index: 0,
         rest_timer: 0,
