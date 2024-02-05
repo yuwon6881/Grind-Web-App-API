@@ -30,6 +30,12 @@ import {
   getWorkoutExercises,
 } from "./handlers/workout_exercise";
 import { validateWorkoutExerciseInput } from "./middlewares/validateWorkoutExerciseInput";
+import {
+  createCustomExercise,
+  deleteCustomExercise,
+  getCustomExercise,
+  getCustomExercises,
+} from "./handlers/custom_exercise";
 
 const router = Router();
 
@@ -47,10 +53,10 @@ router.post("/exercise", validateExerciseInput, createExercise);
 router.delete("/exercise/:id", deleteExercise);
 
 // custom_exercises
-router.get("/custom-exercises", () => {});
-router.get("/custom-exercise/:id", () => {});
-router.post("/custom-exercise", validateExerciseInput, () => {});
-router.delete("/custom-exercise/:id", () => {});
+router.get("/custom_exercises", getCustomExercises);
+router.get("/custom_exercise/:id", getCustomExercise);
+router.post("/custom_exercise", validateExerciseInput, createCustomExercise);
+router.delete("/custom_exercise/:id", deleteCustomExercise);
 
 // folders
 router.get("/folders", getFolders);
@@ -71,6 +77,8 @@ router.post(
   validateRoutineExerciseInput,
   createRoutineExercise,
 );
+
+//integrate sets into get methods for routines and workouts
 
 // workout_exercises
 router.get("/workout/:id/exercises", getWorkoutExercises);

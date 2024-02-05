@@ -17,6 +17,11 @@ export const exercise = {
   exerciseType: exerciseType.BARBELL,
 };
 
+export const custom_exercise = {
+  name: "Single Leg Deadlift",
+  exerciseType: exerciseType.DUMBBELL,
+};
+
 export function addRoutineExerciseAndCustomExerciseWithSets(
   exercise_id: string,
   custom_exercise_id: string,

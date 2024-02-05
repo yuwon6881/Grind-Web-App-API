@@ -117,4 +117,19 @@ describe("deleteExercise", () => {
       );
     });
   });
+
+  describe("when exercise is not found", () => {
+    it("should return error", async () => {
+      request.params = { id: "1" };
+      prismaMock.exercise.delete.mockRejectedValue(
+        Object.assign(new Error(), { code: "P2025" }),
+      );
+      await deleteExercise(request, response, next);
+      expect(next).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: "Exercise not found",
+        }),
+      );
+    });
+  });
 });

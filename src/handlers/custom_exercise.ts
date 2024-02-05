@@ -1,93 +1,95 @@
 import prisma from "../db";
 import { Request, Response, NextFunction } from "express";
 
-// get all exercises
-export const getExercises = async (
+// get all custom exercises
+export const getCustomExercises = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const exercises = await prisma.exercise.findMany();
-    res.json({ data: exercises });
+    const custom_Exercises = await prisma.custom_Exercise.findMany();
+    res.json({ data: custom_Exercises });
   } catch (error: unknown) {
     if (error instanceof Error) {
-      error.message = "Failed to get exercises";
+      error.message = "Failed to get custom exercises";
       next(error);
     }
   }
 };
 
-// get one exercise
-export const getExercise = async (
+// get one custom exercise
+export const getCustomExercise = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const exercise = await prisma.exercise.findUnique({
+    const custom_Exercise = await prisma.custom_Exercise.findUnique({
       where: {
         id: req.params.id,
       },
     });
-    if (!exercise) {
+    if (!custom_Exercise) {
       const error = new Error();
-      error.message = "Exercise not found";
+      error.message = "Custom exercise not found";
       error.name = "inputError";
       throw error;
     }
-    res.json({ data: exercise });
+    res.json({ data: custom_Exercise });
   } catch (error: unknown) {
     if (error instanceof Error) {
-      error.message = error.message || "Failed to get exercise";
+      error.message = error.message || "Failed to get custom exercise";
       next(error);
     }
   }
 };
 
-// create an exercise
-export const createExercise = async (
+// create a custom exercise
+export const createCustomExercise = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const exercise = await prisma.exercise.create({
+    const custom_Exercise = await prisma.custom_Exercise.create({
       data: {
         name: req.body.name,
         exerciseType: req.body.exerciseType,
+        user_id: req.user!.id,
       },
     });
-    res.json({ data: exercise });
+    res.json({ data: custom_Exercise });
   } catch (error: unknown) {
     if (error instanceof Error) {
-      error.message = "Failed to create exercise";
+      error.message = error.message || "Failed to create custom exercise";
       next(error);
     }
   }
 };
 
-// delete an exercise
-export const deleteExercise = async (
+// delete a custom exercise
+export const deleteCustomExercise = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const deleted = await prisma.exercise.delete({
+    const custom_Exercise = await prisma.custom_Exercise.delete({
       where: {
         id: req.params.id,
       },
     });
-    res.json({ data: deleted });
+    res.json({ data: custom_Exercise });
   } catch (error: unknown) {
     const customError = error as Error & { code: string };
     if (customError instanceof Error) {
       if (customError.code === "P2025") {
         customError.name = "inputError";
-        customError.message = "Exercise not found";
+        customError.message = "Custom exercise not found";
       }
-      customError.message = customError.message || "Failed to delete exercise";
+      customError.message =
+        customError.message || "Failed to delete custom exercise";
       next(customError);
     }
   }
