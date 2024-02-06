@@ -5,6 +5,7 @@ import {
   Custom_Exercise,
   Exercise,
   Routine,
+  Routine_Set,
   exerciseType,
 } from "@prisma/client";
 import { addRoutineExerciseAndCustomExerciseWithSets, user } from "./testData";
@@ -16,12 +17,17 @@ beforeEach(async () => {
 });
 
 describe("Routine Exercise Endpoints", () => {
-  let routine: Routine, exercise: Exercise, custom_exercise: Custom_Exercise;
+  let routine: Routine,
+    exercise: Exercise,
+    custom_exercise: Custom_Exercise,
+    routine_set: Routine_Set;
   beforeEach(async () => {
     const user = await prisma.user.findMany();
     const folder = await prisma.folder.findMany();
     await prisma.$transaction(
-      async (prisma): Promise<[Routine, Exercise, Custom_Exercise]> => {
+      async (
+        prisma,
+      ): Promise<[Routine, Exercise, Custom_Exercise, Routine_Set]> => {
         routine = await prisma.routine.create({
           data: {
             name: "test",
@@ -44,6 +50,17 @@ describe("Routine Exercise Endpoints", () => {
           },
         });
 
+        routine_set = await prisma.routine_Set.create({
+          data: {
+            routine_id: routine.id,
+            exercise_id: exercise.id,
+            reps: 5,
+            weight: 100,
+            rpe: 9,
+            index: 0,
+          },
+        });
+
         await prisma.routine_Exercise.create({
           data: {
             routine_id: routine.id,
@@ -62,7 +79,7 @@ describe("Routine Exercise Endpoints", () => {
             note: "note1",
           },
         });
-        return [routine, exercise, custom_exercise];
+        return [routine, exercise, custom_exercise, routine_set];
       },
     );
   });
@@ -73,7 +90,10 @@ describe("Routine Exercise Endpoints", () => {
           .get(`/api/routine/${routine.id}/exercises`)
           .set("Authorization", `Bearer ${token}`);
         expect(response.status).toEqual(200);
-        expect(response.body.data).toEqual([exercise, custom_exercise]);
+        expect(response.body.data).toEqual([
+          { ...exercise, sets: [routine_set] },
+          { ...custom_exercise, sets: [] },
+        ]);
       });
     });
     describe("when request is invalid", () => {
@@ -90,6 +110,7 @@ describe("Routine Exercise Endpoints", () => {
     beforeEach(async () => {
       await prisma.routine_Exercise.deleteMany();
       await prisma.routine_Custom_Exercise.deleteMany();
+      await prisma.routine_Set.deleteMany();
     });
     describe("when request is valid", () => {
       it("should add exercises to the routine", async () => {

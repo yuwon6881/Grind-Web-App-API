@@ -7,7 +7,7 @@ export const getRoutineExercises = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const routine_exerciseQuery = await prisma.routine.findMany({
+    const routine_exercises = await prisma.routine.findMany({
       where: {
         id: req.params.id,
       },
@@ -25,16 +25,33 @@ export const getRoutineExercises = async (
         },
       },
     });
-    const routine_exercises = routine_exerciseQuery.flatMap((routine) => [
-      ...routine.Routine_Exercise.map(
-        (routine_exercise) => routine_exercise.Exercise,
-      ),
-      ...routine.Routine_Custom_Exercise.map(
-        (routine_custom_exercise) => routine_custom_exercise.Custom_Exercise,
-      ),
+
+    const routine_sets = await prisma.routine_Set.findMany({
+      where: {
+        routine_id: req.params.id,
+      },
+    });
+
+    const combined = routine_exercises.flatMap((routine) => [
+      ...routine.Routine_Exercise.map((routine_exercise) => ({
+        ...routine_exercise.Exercise,
+        sets: routine_sets?.filter(
+          (set) => set.exercise_id === routine_exercise.exercise_id,
+        ),
+      })),
+      ...routine.Routine_Custom_Exercise.map((routine_custom_exercise) => ({
+        ...routine_custom_exercise.Custom_Exercise,
+        sets: routine_sets?.filter(
+          (set) =>
+            set.custom_exercise_id ===
+            routine_custom_exercise.custom_exercise_id,
+        ),
+      })),
     ]);
-    res.json({ data: routine_exercises });
+
+    res.json({ data: combined });
   } catch (error: unknown) {
+    console.log(error);
     if (error instanceof Error) {
       error.message = "Error getting routine exercises";
       next(error);

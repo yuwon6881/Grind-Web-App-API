@@ -8,7 +8,7 @@ export const getWorkoutExercises = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const workout_exerciseQuery = await prisma.workout.findMany({
+    const workout_exercises = await prisma.workout.findMany({
       where: {
         id: req.params.id,
       },
@@ -26,15 +26,30 @@ export const getWorkoutExercises = async (
         },
       },
     });
-    const workout_exercises = workout_exerciseQuery.flatMap((workout) => [
-      ...workout.Workout_Exercise.map(
-        (workout_exercise) => workout_exercise.Exercise,
-      ),
-      ...workout.Workout_Custom_Exercise.map(
-        (workout_custom_exercise) => workout_custom_exercise.Custom_Exercise,
-      ),
+
+    const workout_set = await prisma.workout_Sets.findMany({
+      where: {
+        workout_id: req.params.id,
+      },
+    });
+    const combined = workout_exercises.flatMap((workout) => [
+      ...workout.Workout_Exercise.map((workout_exercise) => ({
+        ...workout_exercise.Exercise,
+        sets: workout_set?.filter((sets) => {
+          return sets.exercise_id === workout_exercise.exercise_id;
+        }),
+      })),
+      ...workout.Workout_Custom_Exercise.map((workout_custom_exercise) => ({
+        ...workout_custom_exercise.Custom_Exercise,
+        sets: workout_set?.filter((sets) => {
+          return (
+            sets.custom_exercise_id ===
+            workout_custom_exercise.custom_exercise_id
+          );
+        }),
+      })),
     ]);
-    res.json({ data: workout_exercises });
+    res.json({ data: combined });
   } catch (error: unknown) {
     if (error instanceof Error) {
       error.message = "Error getting workout exercises";

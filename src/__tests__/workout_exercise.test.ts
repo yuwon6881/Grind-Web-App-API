@@ -6,6 +6,7 @@ import {
   Exercise,
   Routine,
   Workout,
+  Workout_Sets,
   exerciseType,
 } from "@prisma/client";
 import { addWorkoutExerciseAndCustomExerciseWithSets, user } from "./testData";
@@ -20,14 +21,17 @@ describe("Workout Exercise Endpoints", () => {
   let routine: Routine,
     exercise: Exercise,
     custom_exercise: Custom_Exercise,
-    workout: Workout;
+    workout: Workout,
+    workout_set: Workout_Sets;
   beforeEach(async () => {
     const user = await prisma.user.findMany();
     const folder = await prisma.folder.findMany();
     await prisma.$transaction(
       async (
         prisma,
-      ): Promise<[Routine, Exercise, Custom_Exercise, Workout]> => {
+      ): Promise<
+        [Routine, Exercise, Custom_Exercise, Workout, Workout_Sets]
+      > => {
         routine = await prisma.routine.create({
           data: {
             name: "test",
@@ -55,6 +59,15 @@ describe("Workout Exercise Endpoints", () => {
             routine_id: routine.id,
           },
         });
+
+        workout_set = await prisma.workout_Sets.create({
+          data: {
+            workout_id: workout.id,
+            exercise_id: exercise.id,
+            reps: 10,
+            weight: 100,
+          },
+        });
         await prisma.workout_Exercise.create({
           data: {
             workout_id: workout.id,
@@ -74,7 +87,7 @@ describe("Workout Exercise Endpoints", () => {
           },
         });
 
-        return [routine, exercise, custom_exercise, workout];
+        return [routine, exercise, custom_exercise, workout, workout_set];
       },
     );
   });
@@ -85,7 +98,10 @@ describe("Workout Exercise Endpoints", () => {
           .get(`/api/workout/${workout.id}/exercises`)
           .set("Authorization", `Bearer ${token}`);
         expect(response.status).toEqual(200);
-        expect(response.body.data).toEqual([exercise, custom_exercise]);
+        expect(response.body.data).toEqual([
+          { ...exercise, sets: [workout_set] },
+          { ...custom_exercise, sets: [] },
+        ]);
       });
     });
     describe("when request is invalid", () => {
@@ -102,6 +118,7 @@ describe("Workout Exercise Endpoints", () => {
     beforeEach(async () => {
       await prisma.workout_Exercise.deleteMany();
       await prisma.workout_Custom_Exercise.deleteMany();
+      await prisma.workout_Sets.deleteMany();
     });
     describe("when request is valid", () => {
       it("should add exercises to the workout", async () => {

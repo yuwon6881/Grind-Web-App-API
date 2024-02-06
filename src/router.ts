@@ -78,8 +78,6 @@ router.post(
   createRoutineExercise,
 );
 
-//integrate sets into get methods for routines and workouts
-
 // workout_exercises
 router.get("/workout/:id/exercises", getWorkoutExercises);
 router.post(
