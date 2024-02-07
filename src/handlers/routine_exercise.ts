@@ -51,7 +51,6 @@ export const getRoutineExercises = async (
 
     res.json({ data: combined });
   } catch (error: unknown) {
-    console.log(error);
     if (error instanceof Error) {
       error.message = "Error getting routine exercises";
       next(error);

@@ -28,25 +28,3 @@ export const createRoutine = async (
     }
   }
 };
-
-// get a routine for folder
-export const getRoutine = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
-  try {
-    const routinesQuery = await prisma.folder.findMany({
-      where: { id: req.params.id },
-      include: { Routine: true },
-    });
-
-    const routines = routinesQuery.flatMap((folder) => folder.Routine);
-    res.json({ data: routines });
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      error.message = "Failed to get routine";
-      next(error);
-    }
-  }
-};

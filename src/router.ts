@@ -13,8 +13,8 @@ import { getSetting, updateSetting } from "./handlers/setting";
 import { deleteUser } from "./handlers/user";
 import { errorHandler } from "./middlewares/errorhandler";
 import { validateFolderRoutineInput } from "./middlewares/validateFolderRoutineInput";
-import { deleteRoutine } from "./handlers/routines";
-import { createRoutine, getRoutine } from "./handlers/folder_routines";
+import { deleteRoutine, getRoutines } from "./handlers/routines";
+import { createRoutine } from "./handlers/folder_routines";
 import { deleteWorkout, getWorkouts } from "./handlers/workout";
 import {
   createRoutineWorkouts,
@@ -64,10 +64,10 @@ router.post("/folder", validateFolderInput, createFolder);
 router.delete("/folder/:id", deleteFolder);
 
 // routines
+router.get("/routines", getRoutines);
 router.delete("/routine/:id", deleteRoutine);
 
 //folder_routines
-router.get("/folder/:id/routines", getRoutine);
 router.post("/folder/:id/routine", validateFolderRoutineInput, createRoutine);
 
 // routine_exercise

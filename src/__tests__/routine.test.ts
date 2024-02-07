@@ -13,6 +13,29 @@ beforeEach(async () => {
 });
 
 describe("Routine Endpoints", () => {
+  describe("GET /api/routines", () => {
+    let routine: Routine;
+    beforeEach(async () => {
+      const existedFolder: Folder[] = await prisma.folder.findMany();
+      routine = await prisma.routine.create({
+        data: {
+          name: "test",
+          folder_id: existedFolder[0].id,
+        },
+      });
+    });
+    describe("when request is valid", () => {
+      it("should return routines", async () => {
+        const response: Response = await request(app)
+          .get("/api/routines")
+          .set("Authorization", `Bearer ${token}`);
+        expect(response.status).toBe(200);
+        expect(response.body).toEqual({
+          data: [routine],
+        });
+      });
+    });
+  });
   describe("DELETE /api/routine/:id", () => {
     let routine: Routine;
     beforeEach(async () => {
