@@ -6,5 +6,5 @@ import app from "./server";
 import config from "./config";
 
 app.listen(config.port, () => {
-  console.log("Server running on port 8000");
+  console.log("Server running on port " + config.port);
 });

@@ -9,9 +9,10 @@ import {
 } from "./middlewares/validateUserInput";
 import { errorHandler } from "./middlewares/errorhandler";
 import "./middlewares/appErrorHandler";
+import cors from "cors";
 
 const app = express();
-
+app.use(cors());
 app.use(morgan("dev", { skip: () => process.env.NODE_ENV === "test" }));
 
 app.use(express.json());
