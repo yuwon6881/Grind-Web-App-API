@@ -1,10 +1,9 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 
 export const errorHandler = (
   error: Error,
   req: Request,
   res: Response,
-  next: NextFunction,
 ): void => {
   if (error.name === "authError") {
     res.status(401);
