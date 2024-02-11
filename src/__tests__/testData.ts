@@ -1,9 +1,11 @@
-import { exerciseType, set_type } from "@prisma/client";
+import { Role, exerciseType, set_type } from "@prisma/client";
 
 export const user = {
   name: "test",
   email: "test@test.com",
   password: "password",
+  confirmPassword: "password",
+  role: Role.USER,
 };
 
 export const signInUser = {

@@ -41,6 +41,11 @@ export const createNewUser = async (
       );
     if (user && setting && folder) {
       const token = createJWT(user);
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 3600000,
+      });
       res.json({ token });
     }
   } catch (error: unknown) {
@@ -75,7 +80,7 @@ export const signIn = async (
 
     if (!user) {
       res.status(401);
-      res.json({ message: "No user found" });
+      res.json({ message: "Invalid Email" });
       return;
     }
 
@@ -88,6 +93,11 @@ export const signIn = async (
     }
 
     const token = createJWT(user);
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 3600000,
+    });
     res.json({ token });
   } catch (error: unknown) {
     if (error instanceof Error) {

@@ -42,6 +42,7 @@ export const createJWT = (user: User): string => {
     {
       id: user.id,
       email: user.email,
+      role: user.role,
     },
     config.secrets.jwt as Secret,
   );
@@ -62,6 +63,7 @@ export const protect = (
     return;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, token] = bearer.split(" ");
 
   if (!token) {

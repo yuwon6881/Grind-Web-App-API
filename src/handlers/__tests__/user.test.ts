@@ -101,7 +101,7 @@ describe("signIn", () => {
       await signIn(request, response, next);
       expect(response.status).toHaveBeenCalledWith(401);
       expect(response.json).toHaveBeenCalledWith(
-        expect.objectContaining({ message: "No user found" }),
+        expect.objectContaining({ message: "Invalid Email" }),
       );
     });
   });

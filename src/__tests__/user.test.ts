@@ -96,13 +96,13 @@ describe("User Endpoints", () => {
       });
     });
     describe("when user is not found", () => {
-      it("should return a no user found error", async () => {
+      it("should return a invalid email error", async () => {
         const response: Response = await request(app)
           .post("/signIn")
           .send({ ...signInUser, email: "invalidEmail@test.com" });
         expect(response.status).toBe(401);
         expect(response.body).toMatchObject({
-          message: "No user found",
+          message: "Invalid Email",
         });
       });
     });
