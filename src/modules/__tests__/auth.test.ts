@@ -141,7 +141,6 @@ describe("verifyJWT", () => {
     request.cookies = {};
     response.clearCookie = jest.fn();
     verifyJWT(request, response);
-    expect(response.status).toHaveBeenCalledWith(401);
     expect(response.json).toHaveBeenCalledWith(
       expect.objectContaining({ valid: false }),
     );

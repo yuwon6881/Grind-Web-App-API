@@ -95,7 +95,6 @@ export const verifyJWT = (req: Request, res: Response): void => {
     res.json({ valid: true });
   } catch (error) {
     res.clearCookie("token");
-    res.status(401);
     res.json({ valid: false });
     return;
   }
