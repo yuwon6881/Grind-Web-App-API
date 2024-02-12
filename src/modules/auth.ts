@@ -82,3 +82,21 @@ export const protect = (
     return;
   }
 };
+
+export const verifyJWT = (req: Request, res: Response): void => {
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      throw new Error();
+    }
+
+    jwt.verify(token, config.secrets.jwt as Secret) as User;
+    res.status(200);
+    res.json({ valid: true });
+  } catch (error) {
+    res.clearCookie("token");
+    res.status(401);
+    res.json({ valid: false });
+    return;
+  }
+};

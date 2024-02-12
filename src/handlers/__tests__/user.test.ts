@@ -15,6 +15,7 @@ describe("createNewUser", () => {
   describe("when request is valid", () => {
     it("should return a user", async () => {
       request.body = user;
+      response.cookie = jest.fn();
       prismaMock.user.create.mockResolvedValue(user);
       prismaMock.settings.create.mockResolvedValue(settings);
       prismaMock.folder.create.mockResolvedValue(folder);
@@ -60,6 +61,7 @@ describe("signIn", () => {
   describe("when request is valid", () => {
     it("should return a token", async () => {
       request.body = signInData;
+      response.cookie = jest.fn();
       prismaMock.user.findUnique.mockResolvedValue(user);
       await signIn(request, response, next);
       expect(response.json).toHaveBeenCalledWith(

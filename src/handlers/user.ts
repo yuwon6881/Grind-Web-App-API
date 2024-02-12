@@ -134,3 +134,19 @@ export const deleteUser = async (
     }
   }
 };
+
+export const userSignOut = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    res.clearCookie("token");
+    res.json({ message: "Sign out successful", success: true });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      error.message = "Failed to sign out";
+      next(error);
+    }
+  }
+};

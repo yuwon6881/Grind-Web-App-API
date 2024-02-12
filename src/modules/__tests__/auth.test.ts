@@ -1,5 +1,11 @@
 import { request, response, next } from "../../handlers/__tests__/mocks";
-import { comparePasswords, hashPassword, createJWT, protect } from "../auth";
+import {
+  comparePasswords,
+  hashPassword,
+  createJWT,
+  protect,
+  verifyJWT,
+} from "../auth";
 import bcrypt from "bcrypt";
 import { Role, User } from "@prisma/client";
 import jwt from "jsonwebtoken";
@@ -112,6 +118,32 @@ describe("protect", () => {
     expect(response.status).toHaveBeenCalledWith(401);
     expect(response.json).toHaveBeenCalledWith(
       expect.objectContaining({ message: "Unauthorized, invalid token" }),
+    );
+  });
+});
+
+describe("verifyJWT", () => {
+  //Valid request
+  it("should return status 200", async () => {
+    request.cookies = {
+      token: "token",
+    };
+    response.clearCookie = jest.fn();
+    verifyJWT(request, response);
+    expect(response.status).toHaveBeenCalledWith(200);
+    expect(response.json).toHaveBeenCalledWith(
+      expect.objectContaining({ valid: true }),
+    );
+  });
+
+  //Invalid token
+  it("should return status 401", async () => {
+    request.cookies = {};
+    response.clearCookie = jest.fn();
+    verifyJWT(request, response);
+    expect(response.status).toHaveBeenCalledWith(401);
+    expect(response.json).toHaveBeenCalledWith(
+      expect.objectContaining({ valid: false }),
     );
   });
 });
