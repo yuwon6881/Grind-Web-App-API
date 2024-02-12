@@ -1,8 +1,8 @@
 import jwt, { Secret } from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
-import { User } from "../types/user.type";
 import config from "../config";
+import { User } from "@prisma/client";
 
 //Compare passwords
 
@@ -36,11 +36,11 @@ export const hashPassword = async (password: string): Promise<string> => {
 };
 
 //Create JWT
-
 export const createJWT = (user: User): string => {
   const token = jwt.sign(
     {
       id: user.id,
+      name: user.name,
       email: user.email,
       role: user.role,
     },
@@ -93,9 +93,9 @@ export const verifyJWT = (req: Request, res: Response): void => {
       throw new Error();
     }
 
-    jwt.verify(token, config.secrets.jwt as Secret) as User;
+    const response = jwt.verify(token, config.secrets.jwt as Secret) as User;
     res.status(200);
-    res.json({ success: true });
+    res.json({ success: true, name: response.name });
   } catch (error) {
     res.clearCookie("token");
     res.json({ success: false });

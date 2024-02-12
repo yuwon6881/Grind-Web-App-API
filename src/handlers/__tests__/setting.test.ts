@@ -10,7 +10,9 @@ describe("getSetting", () => {
       request.params = { id: "1" };
       prismaMock.settings.findUnique.mockResolvedValue(settings);
       await getSetting(request, response, next);
-      expect(response.json).toHaveBeenCalledWith({ data: settings });
+      expect(response.json).toHaveBeenCalledWith(
+        expect.objectContaining({ data: settings }),
+      );
     });
   });
 
@@ -32,7 +34,9 @@ describe("updateSetting", () => {
       request.body = settings;
       prismaMock.settings.update.mockResolvedValue(settings);
       await updateSetting(request, response, next);
-      expect(response.json).toHaveBeenCalledWith({ data: settings });
+      expect(response.json).toHaveBeenCalledWith(
+        expect.objectContaining({ data: settings }),
+      );
     });
   });
 

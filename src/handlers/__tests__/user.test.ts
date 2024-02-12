@@ -1,5 +1,5 @@
 import { prismaMock } from "../../singleton";
-import { createNewUser, deleteUser, signIn } from "../user";
+import { createNewUser, deleteUser, getUser, getUsers, signIn } from "../user";
 import { comparePasswords } from "../../modules/auth";
 import { request, response, next } from "./mocks";
 import { user, settings, signInData, folder } from "./mockData";
@@ -130,6 +130,48 @@ describe("deleteUser", () => {
         expect.objectContaining({
           message: "Failed to delete user",
         }),
+      );
+    });
+  });
+});
+
+describe("getUser", () => {
+  describe("when request is valid", () => {
+    it("should return user", async () => {
+      request.user = user;
+      getUser(request, response, next);
+      expect(response.json).toHaveBeenCalledWith(
+        expect.objectContaining({ success: true, data: user }),
+      );
+    });
+  });
+  describe("when request is invalid", () => {
+    it("should return user", async () => {
+      request.user = null;
+      getUser(request, response, next);
+      expect(next).toHaveBeenCalledWith(
+        expect.objectContaining({ message: "Failed to get user" }),
+      );
+    });
+  });
+});
+
+describe("getUsers", () => {
+  describe("when request is valid", () => {
+    it("should return users", async () => {
+      prismaMock.user.findMany.mockResolvedValue([user]);
+      await getUsers(request, response, next);
+      expect(response.json).toHaveBeenCalledWith(
+        expect.objectContaining({ success: true, data: [user] }),
+      );
+    });
+  });
+  describe("when request is invalid", () => {
+    it("should call next", async () => {
+      prismaMock.user.findMany.mockRejectedValue(Object.assign(new Error()));
+      await getUsers(request, response, next);
+      expect(next).toHaveBeenCalledWith(
+        expect.objectContaining({ message: "Failed to get users" }),
       );
     });
   });

@@ -31,6 +31,7 @@ describe("Routine Endpoints", () => {
           .set("Authorization", `Bearer ${token}`);
         expect(response.status).toBe(200);
         expect(response.body).toEqual({
+          success: true,
           data: [routine],
         });
       });
@@ -63,7 +64,10 @@ describe("Routine Endpoints", () => {
           .set("Authorization", `Bearer ${token}`);
 
         expect(response.status).toBe(400);
-        expect(response.body).toEqual({ message: "Routine doesnt exist" });
+        expect(response.body).toEqual({
+          success: false,
+          message: "Routine doesnt exist",
+        });
       });
     });
   });

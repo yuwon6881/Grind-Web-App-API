@@ -17,7 +17,7 @@ export const getFolders = async (
       },
     });
 
-    res.json({ data: user?.Folder });
+    res.json({ success: true, data: user!.Folder });
   } catch (error: unknown) {
     if (error instanceof Error) {
       error.message = "Failed to get folders";
@@ -40,7 +40,7 @@ export const createFolder = async (
       },
     });
 
-    res.json({ data: folder });
+    res.json({ success: true, data: folder });
   } catch (error: unknown) {
     if (error instanceof Error) {
       error.message = "Failed to create folder";
@@ -62,7 +62,7 @@ export const deleteFolder = async (
         user_id: req.user!.id,
       },
     });
-    res.json({ data: deleted });
+    res.json({ success: true, data: deleted });
   } catch (error: unknown) {
     const customError = error as Error & { code?: string };
     if (customError instanceof Error) {

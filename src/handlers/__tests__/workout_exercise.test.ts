@@ -17,9 +17,9 @@ describe("getWorkoutExercises", () => {
       request.params = { id: "1" };
       prismaMock.workout.findMany.mockResolvedValueOnce(nestedWorkoutExercises);
       await getWorkoutExercises(request, response, next);
-      expect(response.json).toHaveBeenCalledWith({
-        data: [...exercises, custom_exercise],
-      });
+      expect(response.json).toHaveBeenCalledWith(
+        expect.objectContaining({ data: [...exercises, custom_exercise] }),
+      );
     });
   });
   describe("when request is invalid", () => {
@@ -42,7 +42,7 @@ describe("createWorkoutExercise", () => {
       prismaMock.$transaction.mockResolvedValueOnce({});
       await createWorkoutExercise(request, response, next);
       expect(response.json).toHaveBeenCalledWith({
-        data: "Success",
+        success: true,
       });
     });
   });

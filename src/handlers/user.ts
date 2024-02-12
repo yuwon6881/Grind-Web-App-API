@@ -46,7 +46,7 @@ export const createNewUser = async (
         secure: process.env.NODE_ENV === "production",
         maxAge: 3600000,
       });
-      res.json({ token });
+      res.json({ success: true, token: token });
     }
   } catch (error: unknown) {
     const customError = error as Error & { code: string };
@@ -80,7 +80,7 @@ export const signIn = async (
 
     if (!user) {
       res.status(401);
-      res.json({ message: "Invalid Email" });
+      res.json({ success: false, message: "Invalid Email" });
       return;
     }
 
@@ -88,7 +88,7 @@ export const signIn = async (
 
     if (!isValid) {
       res.status(401);
-      res.json({ message: "Invalid password" });
+      res.json({ success: false, message: "Invalid password" });
       return;
     }
 
@@ -98,7 +98,7 @@ export const signIn = async (
       secure: process.env.NODE_ENV === "production",
       maxAge: 3600000,
     });
-    res.json({ token });
+    res.json({ success: true, token: token });
   } catch (error: unknown) {
     if (error instanceof Error) {
       error.message = "Failed to sign in";
@@ -120,7 +120,7 @@ export const deleteUser = async (
         id: req.user!.id,
       },
     });
-    res.json({ data: user });
+    res.json({ success: true, data: user });
   } catch (error: unknown) {
     const customError = error as Error & { code: string };
     if (customError instanceof Error) {
@@ -135,6 +135,7 @@ export const deleteUser = async (
   }
 };
 
+//Sign out
 export const userSignOut = async (
   req: Request,
   res: Response,
@@ -142,10 +143,47 @@ export const userSignOut = async (
 ) => {
   try {
     res.clearCookie("token");
-    res.json({ message: "Sign out successful", success: true });
+    res.json({ success: true, message: "Sign out successful" });
   } catch (error: unknown) {
     if (error instanceof Error) {
       error.message = "Failed to sign out";
+      next(error);
+    }
+  }
+};
+
+//Get User
+export const getUser = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void => {
+  try {
+    const user = req.user;
+    if (!user) {
+      throw new Error();
+    }
+    res.json({ success: true, data: user });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      error.message = "Failed to get user";
+      next(error);
+    }
+  }
+};
+
+//Get Users
+export const getUsers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const users = await prisma.user.findMany();
+    res.json({ success: true, data: users });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      error.message = "Failed to get users";
       next(error);
     }
   }

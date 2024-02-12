@@ -14,7 +14,11 @@ describe("getCustomExercises", () => {
     it("should return custom exercises", async () => {
       prismaMock.custom_Exercise.findMany.mockResolvedValue([custom_exercise]);
       await getCustomExercises(request, response, next);
-      expect(response.json).toHaveBeenCalledWith({ data: [custom_exercise] });
+      expect(response.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: [custom_exercise],
+        }),
+      );
     });
   });
 

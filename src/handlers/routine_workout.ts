@@ -17,7 +17,7 @@ export const getRoutineWorkouts = async (
     });
 
     const workouts = workoutQuery.flatMap((routine) => routine.Workout);
-    res.json({ data: workouts });
+    res.json({ success: true, data: workouts });
   } catch (error: unknown) {
     if (error instanceof Error) {
       error.message = "Failed to retrieve workouts for routine";
@@ -38,7 +38,7 @@ export const createRoutineWorkouts = async (
       },
     });
 
-    res.json({ data: workout });
+    res.json({ success: true, data: workout });
   } catch (error: unknown) {
     if (error instanceof Error) {
       error.message = "Failed to create workouts";

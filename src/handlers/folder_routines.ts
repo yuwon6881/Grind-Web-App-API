@@ -14,7 +14,7 @@ export const createRoutine = async (
         folder_id: req.params.id,
       },
     });
-    res.json({ data: routine });
+    res.json({ success: true, data: routine });
   } catch (error: unknown) {
     const customError = error as Error & { code: string };
     if (customError instanceof Error) {

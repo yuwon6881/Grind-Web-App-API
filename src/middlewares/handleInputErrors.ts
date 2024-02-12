@@ -15,6 +15,7 @@ export const handleInputErrors = (
   if (!errors.isEmpty()) {
     res.status(400);
     res.json({
+      success: false,
       errors: errors.array(),
       message: errors.array()[0].msg + " for " + errors.array()[0].path,
     });

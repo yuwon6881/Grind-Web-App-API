@@ -176,4 +176,59 @@ describe("User Endpoints", () => {
       });
     });
   });
+  describe("GET /user", () => {
+    let token: string;
+    beforeEach(async () => {
+      //create user
+      const response: Response = await request(app)
+        .post("/register")
+        .send(user);
+      token = response.body.token;
+    });
+    describe("when request is valid", () => {
+      it("should return the user", async () => {
+        const response: Response = await request(app)
+          .get("/api/user")
+          .set("Authorization", `Bearer ${token}`);
+        expect(response.status).toBe(200);
+        expect(response.body).toMatchObject({
+          success: true,
+          data: {
+            role: user.role,
+            id: expect.any(String),
+            email: user.email,
+            iat: expect.any(Number),
+            name: user.name,
+          },
+        });
+      });
+    });
+  });
+  describe("GET /users", () => {
+    let token: string;
+    beforeEach(async () => {
+      //create user
+      const response: Response = await request(app)
+        .post("/register")
+        .send(user);
+      token = response.body.token;
+    });
+    describe("when request is valid", () => {
+      it("should return all users", async () => {
+        const response: Response = await request(app)
+          .get("/api/users")
+          .set("Authorization", `Bearer ${token}`);
+        expect(response.status).toBe(200);
+        expect(response.body).toMatchObject({
+          success: true,
+          data: [
+            {
+              email: user.email,
+              name: user.name,
+            },
+          ],
+        });
+      });
+    });
+  });
 });

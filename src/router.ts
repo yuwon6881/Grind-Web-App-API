@@ -10,7 +10,7 @@ import { validateExerciseInput } from "./middlewares/validateExerciseInput";
 import { validateFolderInput } from "./middlewares/validateFolderInput";
 import { validateSettingInput } from "./middlewares/validateSettingInput";
 import { getSetting, updateSetting } from "./handlers/setting";
-import { deleteUser, userSignOut } from "./handlers/user";
+import { deleteUser, getUser, getUsers, userSignOut } from "./handlers/user";
 import { errorHandler } from "./middlewares/errorhandler";
 import { validateFolderRoutineInput } from "./middlewares/validateFolderRoutineInput";
 import { deleteRoutine, getRoutines } from "./handlers/routines";
@@ -41,6 +41,8 @@ const router = Router();
 
 //user
 router.post("/userSignOut", userSignOut);
+router.get("/user", getUser);
+router.get("/users", getUsers);
 router.delete("/user", deleteUser);
 
 // settings

@@ -20,7 +20,7 @@ export const getSetting = async (
       error.name = "inputError";
       throw error;
     }
-    res.json({ data: setting });
+    res.json({ success: true, data: setting });
   } catch (error: unknown) {
     if (error instanceof Error) {
       error.message = error.message || "Failed to get user setting";
@@ -43,7 +43,7 @@ export const updateSetting = async (
       },
       data: req.body,
     });
-    res.json({ data: setting });
+    res.json({ success: true, data: setting });
   } catch (error: unknown) {
     const customError = error as Error & { code: string };
     if (customError instanceof Error) {

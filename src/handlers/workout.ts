@@ -22,7 +22,7 @@ export const getWorkouts = async (
     const workouts = workoutQuery.flatMap((folder) =>
       folder.Routine.flatMap((routine) => routine.Workout),
     );
-    res.json({ data: workouts });
+    res.json({ success: true, data: workouts });
   } catch (error: unknown) {
     if (error instanceof Error) {
       error.message = "Error retrieving workouts";
@@ -42,7 +42,7 @@ export const deleteWorkout = async (
         id: req.params.id,
       },
     });
-    res.json({ data: workout });
+    res.json({ success: true, data: workout });
   } catch (error: unknown) {
     const customError = error as Error & { code: string };
     if (customError instanceof Error) {

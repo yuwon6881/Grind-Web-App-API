@@ -132,7 +132,7 @@ describe("Workout Exercise Endpoints", () => {
             ),
           );
         expect(response.status).toEqual(200);
-        expect(response.body).toEqual({ data: "Success" });
+        expect(response.body).toEqual({ success: true });
 
         //check if exercises were added
         const workout_exercises = await prisma.workout_Exercise.findMany({

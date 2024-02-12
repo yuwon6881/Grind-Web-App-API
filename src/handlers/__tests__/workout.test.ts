@@ -9,9 +9,9 @@ describe("getWorkouts", () => {
       request.user = user;
       prismaMock.folder.findMany.mockResolvedValueOnce(nestedFolders);
       await getWorkouts(request, response, next);
-      expect(response.json).toHaveBeenCalledWith({
-        data: [workout],
-      });
+      expect(response.json).toHaveBeenCalledWith(
+        expect.objectContaining({ data: [workout] }),
+      );
     });
   });
   describe("when request is invalid", () => {
@@ -32,9 +32,9 @@ describe("deleteWorkout", () => {
       request.params = { id: "1" };
       prismaMock.workout.delete.mockResolvedValueOnce(workout);
       await deleteWorkout(request, response, next);
-      expect(response.json).toHaveBeenCalledWith({
-        data: workout,
-      });
+      expect(response.json).toHaveBeenCalledWith(
+        expect.objectContaining({ data: workout }),
+      );
     });
   });
   describe("when workout is not found", () => {

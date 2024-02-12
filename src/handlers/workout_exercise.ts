@@ -49,7 +49,7 @@ export const getWorkoutExercises = async (
         }),
       })),
     ]);
-    res.json({ data: combined });
+    res.json({ success: true, data: combined });
   } catch (error: unknown) {
     if (error instanceof Error) {
       error.message = "Error getting workout exercises";
@@ -129,7 +129,7 @@ export const createWorkoutExercise = async (
         }),
       );
     });
-    res.json({ data: "Success" });
+    res.json({ success: true });
   } catch (error: unknown) {
     if (error instanceof Error) {
       error.message = error.message || "Error adding exercise to workout";

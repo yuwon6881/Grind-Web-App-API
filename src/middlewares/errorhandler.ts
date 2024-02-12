@@ -16,5 +16,5 @@ export const errorHandler = (
   } else {
     res.status(500);
   }
-  res.json({ message: error.message });
+  res.json({ success: false, message: error.message });
 };

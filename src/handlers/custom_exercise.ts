@@ -9,7 +9,7 @@ export const getCustomExercises = async (
 ): Promise<void> => {
   try {
     const custom_Exercises = await prisma.custom_Exercise.findMany();
-    res.json({ data: custom_Exercises });
+    res.json({ success: true, data: custom_Exercises });
   } catch (error: unknown) {
     if (error instanceof Error) {
       error.message = "Failed to get custom exercises";
@@ -36,7 +36,7 @@ export const getCustomExercise = async (
       error.name = "inputError";
       throw error;
     }
-    res.json({ data: custom_Exercise });
+    res.json({ success: true, data: custom_Exercise });
   } catch (error: unknown) {
     if (error instanceof Error) {
       error.message = error.message || "Failed to get custom exercise";
@@ -59,7 +59,7 @@ export const createCustomExercise = async (
         user_id: req.user!.id,
       },
     });
-    res.json({ data: custom_Exercise });
+    res.json({ success: true, data: custom_Exercise });
   } catch (error: unknown) {
     if (error instanceof Error) {
       error.message = error.message || "Failed to create custom exercise";
@@ -80,7 +80,7 @@ export const deleteCustomExercise = async (
         id: req.params.id,
       },
     });
-    res.json({ data: custom_Exercise });
+    res.json({ success: true, data: custom_Exercise });
   } catch (error: unknown) {
     const customError = error as Error & { code: string };
     if (customError instanceof Error) {

@@ -124,7 +124,7 @@ describe("Routine Exercise Endpoints", () => {
             ),
           );
         expect(response.status).toEqual(200);
-        expect(response.body).toEqual({ data: "Success" });
+        expect(response.body).toEqual({ success: true });
 
         //check if exercises were added
         const routine_exercises = await prisma.routine_Exercise.findMany({

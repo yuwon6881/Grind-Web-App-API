@@ -19,7 +19,7 @@ export const getRoutines = async (
     });
 
     const routines = folders.flatMap((folder) => folder.Routine);
-    res.json({ data: routines });
+    res.json({ success: true, data: routines });
   } catch (error: unknown) {
     if (error instanceof Error) {
       error.message = "Failed to get routines";
@@ -40,7 +40,7 @@ export const deleteRoutine = async (
         id: req.params.id,
       },
     });
-    res.json({ data: routine });
+    res.json({ success: true, data: routine });
   } catch (error: unknown) {
     const customError = error as Error & { code: string };
     if (customError instanceof Error) {
