@@ -1,39 +1,7 @@
-post http://localhost:8000/register
-Content-Type: application/json
-
-{
-    "name": "testUser2",
-    "email": "testUser2@example.com",
-    "password": "test123"
-}
-
-###
-post http://localhost:8000/signIn
-Content-Type: application/json
-
-{
-    "email": "testUser2@example.com",
-    "password": "test123"
-}
-
-###
-get http://localhost:8000/
-
-###
 get http://localhost:8000/api/routines
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNhNGFlOWRkLTRhMDgtNDk1MS04MGRkLWQ1MGY2YzAyZDU0MCIsImVtYWlsIjoidGVzdFVzZXIyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzA2MzM5NjQ4fQ.5b8awP0KMz0LScU2iMn6Zhccgts93U9bM-kbFZuOW-E
-
-
-###
-post http://localhost:8000/api/exercise
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQzNjEzNmU0LThhODEtNGY4NC1iODU1LTRkYmVhNDY5ZTQzYSIsImVtYWlsIjoiam9obmRvZUBleGFtcGxlLmNvbSIsImlhdCI6MTcwNDczMzAzN30.g_LsBXdDCCNqVerHzjvpLxS5IwhUZXuGiRNOuyp6X80
-Content-Type: application/json
-
-{
-    "name": "bench press",
-    "exerciseType": "BARBELL"
-}
+Cookie: token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNiMGUzMGQ4LWFjODUtNDU4ZS04NmZjLWI0MjNjNTMyODdjNyIsImVtYWlsIjoieXV3b242ODg1QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzA3NzI0OTIwfQ.iA1z1UnG4moeUTu5A3cXvEkhqo40nzrKd1Oq3kK5Oag"
 
 ###
-get http://localhost:8000/api/exercise/f04653f9-cd63-4c46-8ed5-11a129d8d7aa
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQzNjEzNmU0LThhODEtNGY4NC1iODU1LTRkYmVhNDY5ZTQzYSIsImVtYWlsIjoiam9obmRvZUBleGFtcGxlLmNvbSIsImlhdCI6MTcwNDczMzAzN30.g_LsBXdDCCNqVerHzjvpLxS5IwhUZXuGiRNOuyp6X80
+
+get http://localhost:8000/api/routines
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNiMGUzMGQ4LWFjODUtNDU4ZS04NmZjLWI0MjNjNTMyODdjNyIsImVtYWlsIjoieXV3b242ODg1QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzA3NzI0OTIwfQ.iA1z1UnG4moeUTu5A3cXvEkhqo40nzrKd1Oq3kK5Oag

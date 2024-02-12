@@ -75,6 +75,9 @@ describe("createJWT", () => {
 });
 
 describe("protect", () => {
+  beforeEach(() => {
+    request.cookies = {};
+  });
   //Valid request
   it("should call next", async () => {
     request.headers = {
@@ -132,7 +135,7 @@ describe("verifyJWT", () => {
     verifyJWT(request, response);
     expect(response.status).toHaveBeenCalledWith(200);
     expect(response.json).toHaveBeenCalledWith(
-      expect.objectContaining({ valid: true }),
+      expect.objectContaining({ success: true }),
     );
   });
 
@@ -142,7 +145,7 @@ describe("verifyJWT", () => {
     response.clearCookie = jest.fn();
     verifyJWT(request, response);
     expect(response.json).toHaveBeenCalledWith(
-      expect.objectContaining({ valid: false }),
+      expect.objectContaining({ success: false }),
     );
   });
 });

@@ -56,20 +56,23 @@ export const protect = (
   res: Response,
   next: NextFunction,
 ): void => {
-  const bearer = req.headers.authorization;
-  if (!bearer) {
-    res.status(401);
-    res.json({ message: "Unauthorized, no token provided" });
-    return;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, token] = bearer.split(" ");
+  let token = req.cookies["token"];
 
   if (!token) {
-    res.status(401);
-    res.json({ message: "Unauthorized, invalid token" });
-    return;
+    const bearer = req.headers["authorization"];
+
+    if (!bearer) {
+      res.status(401);
+      res.json({ message: "Unauthorized, no token provided" });
+      return;
+    }
+
+    token = bearer.split(" ")[1];
+    if (!token) {
+      res.status(401);
+      res.json({ message: "Unauthorized, invalid token" });
+      return;
+    }
   }
 
   try {
@@ -92,10 +95,10 @@ export const verifyJWT = (req: Request, res: Response): void => {
 
     jwt.verify(token, config.secrets.jwt as Secret) as User;
     res.status(200);
-    res.json({ valid: true });
+    res.json({ success: true });
   } catch (error) {
     res.clearCookie("token");
-    res.json({ valid: false });
+    res.json({ success: false });
     return;
   }
 };

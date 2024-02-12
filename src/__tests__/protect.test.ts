@@ -19,4 +19,11 @@ describe("protect middleware", () => {
       expect(response.body.message).toBe("Unauthorized, invalid token");
     });
   });
+  it("should return an error", async () => {
+    const response: Response = await request(app)
+      .delete("/api/user")
+      .set("Authorization", "Bearer invalidToken");
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("Unauthorized, invalid token");
+  });
 });
