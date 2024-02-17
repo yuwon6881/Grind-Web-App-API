@@ -11,7 +11,7 @@ export const getSetting = async (
   try {
     const setting = await prisma.settings.findUnique({
       where: {
-        id: req.params.id,
+        user_id: req.user.id,
       },
     });
     if (!setting) {
@@ -39,7 +39,7 @@ export const updateSetting = async (
   try {
     const setting = await prisma.settings.update({
       where: {
-        id: req.params.id,
+        user_id: req.user.id,
       },
       data: req.body,
     });

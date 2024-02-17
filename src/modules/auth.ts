@@ -43,6 +43,7 @@ export const createJWT = (user: User): string => {
       name: user.name,
       email: user.email,
       role: user.role,
+      profilePicture: user.profilePicture,
     },
     config.secrets.jwt as Secret,
   );
@@ -81,6 +82,7 @@ export const protect = (
     next();
   } catch (e) {
     res.status(401);
+    res.clearCookie("token");
     res.json({ message: "Unauthorized, invalid token" });
     return;
   }

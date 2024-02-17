@@ -46,8 +46,8 @@ router.get("/users", getUsers);
 router.delete("/user", deleteUser);
 
 // settings
-router.get("/setting/:id", getSetting);
-router.put("/setting/:id", validateSettingInput, updateSetting);
+router.get("/setting", getSetting);
+router.put("/setting", validateSettingInput, updateSetting);
 
 // exercises
 router.get("/exercises", getExercises);

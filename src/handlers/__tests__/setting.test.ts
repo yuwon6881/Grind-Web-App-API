@@ -7,7 +7,7 @@ import { settings } from "./mockData";
 describe("getSetting", () => {
   describe("when request is valid", () => {
     it("should return a setting", async () => {
-      request.params = { id: "1" };
+      request.user = { id: "1" };
       prismaMock.settings.findUnique.mockResolvedValue(settings);
       await getSetting(request, response, next);
       expect(response.json).toHaveBeenCalledWith(
@@ -18,7 +18,7 @@ describe("getSetting", () => {
 
   describe("when request is invalid", () => {
     it("should return error", async () => {
-      request.params = { id: "1" };
+      request.user = { id: "1" };
       prismaMock.settings.findUnique.mockRejectedValue(new Error());
       await getSetting(request, response, next);
       expect(next).toHaveBeenCalledWith(
@@ -31,7 +31,7 @@ describe("getSetting", () => {
 describe("updateSetting", () => {
   describe("when request is valid", () => {
     it("should return a setting", async () => {
-      request.body = settings;
+      request.user = { id: "1" };
       prismaMock.settings.update.mockResolvedValue(settings);
       await updateSetting(request, response, next);
       expect(response.json).toHaveBeenCalledWith(
@@ -42,7 +42,7 @@ describe("updateSetting", () => {
 
   describe("when request is invalid", () => {
     it("should return failed to update user setting error)", async () => {
-      request.body = settings;
+      request.user = { id: "1" };
       prismaMock.settings.update.mockRejectedValue(new Error());
       await updateSetting(request, response, next);
       expect(next).toHaveBeenCalledWith(
