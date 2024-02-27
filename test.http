@@ -1,7 +1,7 @@
-get http://localhost:8000/api/routines
-Cookie: token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNiMGUzMGQ4LWFjODUtNDU4ZS04NmZjLWI0MjNjNTMyODdjNyIsImVtYWlsIjoieXV3b242ODg1QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzA3NzI0OTIwfQ.iA1z1UnG4moeUTu5A3cXvEkhqo40nzrKd1Oq3kK5Oag"
+POST http://localhost:8000/signIn
+Content-Type: application/json
 
-###
-
-get http://localhost:8000/api/routines
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNiMGUzMGQ4LWFjODUtNDU4ZS04NmZjLWI0MjNjNTMyODdjNyIsImVtYWlsIjoieXV3b242ODg1QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzA3NzI0OTIwfQ.iA1z1UnG4moeUTu5A3cXvEkhqo40nzrKd1Oq3kK5Oag
+{
+    "email": "yuwon6881@gmail.com",
+    "password": "Jiakmakmak_6881"
+}

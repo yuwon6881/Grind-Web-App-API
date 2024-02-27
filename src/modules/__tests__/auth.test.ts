@@ -77,6 +77,7 @@ describe("createJWT", () => {
 describe("protect", () => {
   beforeEach(() => {
     request.cookies = {};
+    response.clearCookie = jest.fn();
   });
   //Valid request
   it("should call next", async () => {

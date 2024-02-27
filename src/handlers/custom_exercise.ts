@@ -8,7 +8,30 @@ export const getCustomExercises = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const custom_Exercises = await prisma.custom_Exercise.findMany();
+    const custom_Exercises = await prisma.custom_Exercise.findMany({
+      include: {
+        Custom_Exercise_Muscle: {
+          select: {
+            muscleType: true,
+            Muscle: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        Custom_Muscle_Custom_Exercise: {
+          select: {
+            muscleType: true,
+            muscle: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
     res.json({ success: true, data: custom_Exercises });
   } catch (error: unknown) {
     if (error instanceof Error) {

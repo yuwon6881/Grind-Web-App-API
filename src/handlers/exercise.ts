@@ -8,7 +8,20 @@ export const getExercises = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const exercises = await prisma.exercise.findMany();
+    const exercises = await prisma.exercise.findMany({
+      include: {
+        Exercise_Muscle: {
+          select: {
+            muscleType: true,
+            Muscle: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
     res.json({ success: true, data: exercises });
   } catch (error: unknown) {
     if (error instanceof Error) {
