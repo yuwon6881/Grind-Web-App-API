@@ -24,6 +24,14 @@ export const custom_exercise = {
   exerciseType: exerciseType.DUMBBELL,
 };
 
+export const muscle = {
+  name: "Quads",
+};
+
+export const custom_muscle = {
+  name: "Calves",
+};
+
 export function addRoutineExerciseAndCustomExerciseWithSets(
   exercise_id: string,
   custom_exercise_id: string,
