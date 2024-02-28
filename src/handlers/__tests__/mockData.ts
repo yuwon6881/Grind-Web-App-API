@@ -19,6 +19,8 @@ import {
   Exercise_Muscle,
   muscleType,
   Custom_Exercise_Muscle,
+  Muscle,
+  Custom_Muscle,
 } from "@prisma/client";
 
 type MockFolder = Prisma.FolderGetPayload<{
@@ -272,27 +274,4 @@ export const routine_custom_exercise: Routine_Custom_Exercise = {
   index: 0,
   rest_timer: null,
   note: null,
-};
-
-export const muscle: Muscle = {
-  id: "1",
-  name: "Muscle1",
-};
-
-export const customMuscle: Custom_Muscle = {
-  id: "1",
-  name: "CustomMuscle1",
-  user_id: "1",
-};
-
-export const exercise_muscle: Exercise_Muscle = {
-  exercise_id: "1",
-  muscle_id: "1",
-  muscleType: muscleType.PRIMARY,
-};
-
-export const custom_exercise_muscle: Custom_Exercise_Muscle = {
-  custom_exercise_id: "1",
-  muscle_id: "1",
-  muscleType: muscleType.PRIMARY,
 };
