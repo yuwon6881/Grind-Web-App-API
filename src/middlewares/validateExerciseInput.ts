@@ -11,5 +11,6 @@ export const validateExerciseInput = [
     "BODYWEIGHT",
     "DURATION",
   ]),
+  body("muscles").isArray().notEmpty(),
   handleInputErrors,
 ];

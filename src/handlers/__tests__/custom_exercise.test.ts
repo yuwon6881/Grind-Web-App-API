@@ -1,12 +1,13 @@
 import { prismaMock } from "../../singleton";
 import { request, response, next } from "./mocks";
-import { custom_exercise, user } from "./mockData";
+import { custom_exercise, custom_exercise_muscle, user } from "./mockData";
 import {
   getCustomExercises,
   getCustomExercise,
   createCustomExercise,
   deleteCustomExercise,
 } from "../custom_exercise";
+import { muscleType } from "@prisma/client";
 
 // Tests
 describe("getCustomExercises", () => {
@@ -64,11 +65,20 @@ describe("getCustomExercise", () => {
 });
 
 describe("createCustomExercise", () => {
+  beforeEach(() => {
+    request.body = {
+      ...custom_exercise,
+      muscles: [{ muscleID: "1", muscleType: muscleType.PRIMARY }],
+    };
+    request.user = user;
+  });
   describe("when request is valid", () => {
     it("should return a custom exercise", async () => {
       prismaMock.custom_Exercise.create.mockResolvedValue(custom_exercise);
-      request.body = custom_exercise;
-      request.user = user;
+      prismaMock.custom_Exercise_Muscle.create.mockResolvedValue(
+        custom_exercise_muscle,
+      );
+      prismaMock.$transaction.mockResolvedValue(custom_exercise);
       await createCustomExercise(request, response, next);
       expect(response.json).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -81,8 +91,16 @@ describe("createCustomExercise", () => {
   describe("when request is invalid", () => {
     it("should return error", async () => {
       prismaMock.custom_Exercise.create.mockRejectedValue(new Error());
-      request.body = custom_exercise;
-      request.user = user;
+      await createCustomExercise(request, response, next);
+      expect(next).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: "Failed to create custom exercise",
+        }),
+      );
+    });
+    it("should return error", async () => {
+      prismaMock.custom_Exercise.create.mockResolvedValue(custom_exercise);
+      prismaMock.custom_Exercise_Muscle.create.mockRejectedValue(new Error());
       await createCustomExercise(request, response, next);
       expect(next).toHaveBeenCalledWith(
         expect.objectContaining({

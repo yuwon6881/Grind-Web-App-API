@@ -6,7 +6,8 @@ import {
   deleteExercise,
 } from "../exercise";
 import { request, response, next } from "./mocks";
-import { exercises } from "./mockData";
+import { exercise_muscle, exercises } from "./mockData";
+import { muscleType } from "@prisma/client";
 
 // Tests
 describe("getExercises", () => {
@@ -64,10 +65,17 @@ describe("getExercise", () => {
 });
 
 describe("createExercise", () => {
+  beforeEach(() => {
+    request.body = {
+      ...exercises[0],
+      muscles: [{ muscleID: "1", muscleType: muscleType.PRIMARY }],
+    };
+  });
   describe("when request is valid", () => {
     it("should return an exercise", async () => {
-      request.body = exercises[0];
       prismaMock.exercise.create.mockResolvedValue(exercises[0]);
+      prismaMock.exercise_Muscle.create.mockResolvedValue(exercise_muscle);
+      prismaMock.$transaction.mockResolvedValue(exercises[0]);
       await createExercise(request, response, next);
       expect(response.json).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -79,8 +87,17 @@ describe("createExercise", () => {
 
   describe("when request is invalid", () => {
     it("should return error", async () => {
-      request.body = exercises[0];
       prismaMock.exercise.create.mockRejectedValue(new Error());
+      await createExercise(request, response, next);
+      expect(next).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: "Failed to create exercise",
+        }),
+      );
+    });
+    it("should return error", async () => {
+      prismaMock.exercise.create.mockResolvedValue(exercises[0]);
+      prismaMock.exercise_Muscle.create.mockRejectedValue(new Error());
       await createExercise(request, response, next);
       expect(next).toHaveBeenCalledWith(
         expect.objectContaining({

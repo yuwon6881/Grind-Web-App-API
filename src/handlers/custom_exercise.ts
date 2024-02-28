@@ -1,3 +1,4 @@
+import { Custom_Exercise, muscleType } from "@prisma/client";
 import prisma from "../db";
 import { Request, Response, NextFunction } from "express";
 
@@ -75,13 +76,58 @@ export const createCustomExercise = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const custom_Exercise = await prisma.custom_Exercise.create({
-      data: {
-        name: req.body.name,
-        exerciseType: req.body.exerciseType,
-        user_id: req.user!.id,
+    const custom_Exercise: Custom_Exercise = await prisma.$transaction(
+      async (prisma): Promise<Custom_Exercise> => {
+        const transaction_custom_Exercise = await prisma.custom_Exercise.create(
+          {
+            data: {
+              name: req.body.name,
+              exerciseType: req.body.exerciseType,
+              user_id: req.user!.id,
+            },
+          },
+        );
+
+        const muscles: { muscleID: string; muscleType: muscleType }[] =
+          req.body.muscles;
+
+        const transaction_promises = muscles.map(async (muscle) => {
+          const muscleExists = await prisma.custom_Muscle.findUnique({
+            where: {
+              id: muscle.muscleID,
+            },
+          });
+          if (!muscleExists) {
+            const error = new Error("Muscle not found");
+            error.name = "inputError";
+            throw error;
+          }
+          return prisma.custom_Muscle_Custom_Exercise.create({
+            data: {
+              exercise: {
+                connect: {
+                  id: transaction_custom_Exercise.id,
+                },
+              },
+              muscle: {
+                connect: {
+                  id: muscle.muscleID,
+                },
+              },
+              muscleType: muscle.muscleType,
+            },
+          });
+        });
+
+        await Promise.all(transaction_promises);
+        return transaction_custom_Exercise;
       },
-    });
+    );
+    if (!custom_Exercise) {
+      const error = new Error();
+      error.message = "Failed to create custom exercise";
+      throw error;
+    }
     res.json({ success: true, data: custom_Exercise });
   } catch (error: unknown) {
     if (error instanceof Error) {

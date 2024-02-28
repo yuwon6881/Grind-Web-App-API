@@ -1,3 +1,4 @@
+import { Exercise, muscleType } from "@prisma/client";
 import prisma from "../db";
 import { Request, Response, NextFunction } from "express";
 
@@ -65,16 +66,58 @@ export const createExercise = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const exercise = await prisma.exercise.create({
-      data: {
-        name: req.body.name,
-        exerciseType: req.body.exerciseType,
+    const exercise: Exercise = await prisma.$transaction(
+      async (prisma): Promise<Exercise> => {
+        const transaction_exercise = await prisma.exercise.create({
+          data: {
+            name: req.body.name,
+            exerciseType: req.body.exerciseType,
+          },
+        });
+
+        const muscles: { muscleID: string; muscleType: muscleType }[] =
+          req.body.muscles;
+
+        const transaction_promises = muscles.map(async (muscle) => {
+          const muscleExists = await prisma.muscle.findUnique({
+            where: {
+              id: muscle.muscleID,
+            },
+          });
+          if (!muscleExists) {
+            const error = new Error("Muscle not found");
+            error.name = "inputError";
+            throw error;
+          }
+          return prisma.exercise_Muscle.create({
+            data: {
+              Exercise: {
+                connect: {
+                  id: transaction_exercise.id,
+                },
+              },
+              Muscle: {
+                connect: {
+                  id: muscle.muscleID,
+                },
+              },
+              muscleType: muscle.muscleType,
+            },
+          });
+        });
+
+        await Promise.all(transaction_promises);
+
+        return transaction_exercise;
       },
-    });
+    );
+    if (!exercise) {
+      throw new Error();
+    }
     res.json({ success: true, data: exercise });
   } catch (error: unknown) {
     if (error instanceof Error) {
-      error.message = "Failed to create exercise";
+      error.message = error.message || "Failed to create exercise";
       next(error);
     }
   }

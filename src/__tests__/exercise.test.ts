@@ -1,7 +1,9 @@
 import { Response } from "supertest";
 import app from "../server";
-import { exercise, user } from "./testData";
+import { exercise, muscle, user } from "./testData";
 import request from "supertest";
+import prisma from "../db";
+import { Muscle, muscleType } from "@prisma/client";
 
 let token: string;
 
@@ -9,10 +11,9 @@ beforeEach(async () => {
   const response: Response = await request(app).post("/register").send(user);
   token = response.body.token;
 
-  await request(app)
-    .post("/api/exercise")
-    .set("Authorization", `Bearer ${token}`)
-    .send(exercise);
+  await prisma.exercise.create({
+    data: exercise,
+  });
 });
 
 describe("Exercise Endpoints", () => {
@@ -61,15 +62,40 @@ describe("Exercise Endpoints", () => {
     });
   });
   describe("POST /api/exercise", () => {
+    let createdMuscle: Muscle;
+    beforeEach(async () => {
+      createdMuscle = await prisma.muscle.create({
+        data: muscle,
+      });
+    });
     describe("when request is valid", () => {
       it("should create an exercise", async () => {
         const response: Response = await request(app)
           .post("/api/exercise")
           .set("Authorization", `Bearer ${token}`)
-          .send(exercise);
+          .send({
+            ...exercise,
+            muscles: [
+              { muscleID: createdMuscle.id, muscleType: muscleType.PRIMARY },
+            ],
+          });
 
         expect(response.status).toBe(200);
         expect(response.body.data).toMatchObject(exercise);
+      });
+    });
+    describe("when transaction fails", () => {
+      it("should return muscle not found error", async () => {
+        const response: Response = await request(app)
+          .post("/api/exercise")
+          .set("Authorization", `Bearer ${token}`)
+          .send({
+            ...exercise,
+            muscles: [{ muscleID: "1", muscleType: muscleType.PRIMARY }],
+          });
+
+        expect(response.status).toBe(400);
+        expect(response.body.message).toEqual("Muscle not found");
       });
     });
     describe("when name is missing from the body", () => {

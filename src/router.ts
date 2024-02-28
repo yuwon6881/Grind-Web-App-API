@@ -36,6 +36,19 @@ import {
   getCustomExercise,
   getCustomExercises,
 } from "./handlers/custom_exercise";
+import {
+  createMuscle,
+  deleteMuscle,
+  getMuscle,
+  getMuscles,
+} from "./handlers/muscle";
+import {
+  deleteCustomMuscle,
+  getCustomMuscle,
+  getCustomMuscles,
+} from "./handlers/custom_muscle";
+import { validateMuscleInput } from "./middlewares/validateMuscleInput";
+import { validateCustomMuscleInput } from "./middlewares/validateCustomMuscleInput";
 
 const router = Router();
 
@@ -60,6 +73,18 @@ router.get("/custom_exercises", getCustomExercises);
 router.get("/custom_exercise/:id", getCustomExercise);
 router.post("/custom_exercise", validateExerciseInput, createCustomExercise);
 router.delete("/custom_exercise/:id", deleteCustomExercise);
+
+// muscles
+router.get("/muscles", getMuscles);
+router.get("/muscle/:id", getMuscle);
+router.post("/muscle", validateMuscleInput, createMuscle);
+router.delete("/muscle/:id", deleteMuscle);
+
+// custom_muscles
+router.get("/custom_muscles", getCustomMuscles);
+router.get("/custom_muscle/:id", getCustomMuscle);
+router.post("/custom_muscle", validateCustomMuscleInput, createMuscle);
+router.delete("/custom_muscle/:id", deleteCustomMuscle);
 
 // folders
 router.get("/folders", getFolders);
