@@ -14,8 +14,6 @@ import {
   Custom_Exercise,
   Routine_Exercise,
   Routine_Custom_Exercise,
-  Muscle,
-  Custom_Muscle,
   Exercise_Muscle,
   muscleType,
   Custom_Exercise_Muscle,
@@ -177,6 +175,29 @@ export const nestedFolders: MockFolder[] = [
     ],
   },
 ];
+
+export const muscle: Muscle = {
+  id: "1",
+  name: "muscle1",
+};
+
+export const customMuscle: Custom_Muscle = {
+  id: "1",
+  name: "custom_muscle1",
+  user_id: "1",
+};
+
+export const exercise_muscle: Exercise_Muscle = {
+  exercise_id: "1",
+  muscle_id: "1",
+  muscleType: muscleType.PRIMARY,
+};
+
+export const custom_exercise_muscle: Custom_Exercise_Muscle = {
+  custom_exercise_id: "1",
+  muscle_id: "1",
+  muscleType: muscleType.PRIMARY,
+};
 
 export const nestedWorkouts: MockRoutine[] = [
   {
