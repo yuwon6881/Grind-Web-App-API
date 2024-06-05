@@ -92,24 +92,46 @@ export const createCustomExercise = async (
           req.body.muscles;
 
         const transaction_promises = muscles.map(async (muscle) => {
-          const muscleExists = await prisma.custom_Muscle.findUnique({
+          const muscleExists = await prisma.muscle.findUnique({
             where: {
               id: muscle.muscleID,
             },
           });
           if (!muscleExists) {
-            const error = new Error("Muscle not found");
-            error.name = "inputError";
-            throw error;
+            const customMuscleExists = await prisma.custom_Muscle.findUnique({
+              where: {
+                id: muscle.muscleID,
+              },
+            });
+            if (!customMuscleExists) {
+              const error = new Error("Muscle not found");
+              error.name = "inputError";
+              throw error;
+            }
+            return prisma.custom_Muscle_Custom_Exercise.create({
+              data: {
+                exercise: {
+                  connect: {
+                    id: transaction_custom_Exercise.id,
+                  },
+                },
+                muscle: {
+                  connect: {
+                    id: muscle.muscleID,
+                  },
+                },
+                muscleType: muscle.muscleType,
+              },
+            });
           }
-          return prisma.custom_Muscle_Custom_Exercise.create({
+          return prisma.custom_Exercise_Muscle.create({
             data: {
-              exercise: {
+              Custom_Exercise: {
                 connect: {
                   id: transaction_custom_Exercise.id,
                 },
               },
-              muscle: {
+              Muscle: {
                 connect: {
                   id: muscle.muscleID,
                 },

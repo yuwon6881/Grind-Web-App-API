@@ -5,3 +5,14 @@ Content-Type: application/json
     "email": "yuwon6881@gmail.com",
     "password": "Jiakmakmak_6881"
 }
+
+###
+POST http://localhost:8000/api/custom_exercise
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkxMTg5N2ZjLTNlZWEtNDAzNi1iMGU3LWY3MjRjZDYzMDBhYSIsIm5hbWUiOiJDaGVvbmcgWXUgV29uIiwiZW1haWwiOiJ5dXdvbjY4ODFAZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJwcm9maWxlUGljdHVyZSI6bnVsbCwiaWF0IjoxNzE3Mzc4MzE2fQ.Ge7SKwvh4w6AQK_BYDjjicUf9c9FvEib9LKQ3Ve0IxM
+
+{
+    "name": "Shalin",
+    "exerciseType": "BARBELL",
+    "muscles": [{"muscleID":"b7879b7d-376d-479f-94f6-e7ae0b9d6882","muscleType":"PRIMARY"}]
+}
