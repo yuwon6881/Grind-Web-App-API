@@ -81,12 +81,12 @@ describe("Custom Exercise Endpoints", () => {
           .set("Authorization", `Bearer ${token}`)
           .send({
             ...custom_exercise,
-            muscles: [
+            muscles: JSON.stringify([
               {
                 muscleID: createdCustomMuscle.id,
                 muscleType: muscleType.PRIMARY,
               },
-            ],
+            ]),
           });
         expect(response.status).toBe(200);
         expect(response.body.data).toMatchObject(custom_exercise);
@@ -97,15 +97,14 @@ describe("Custom Exercise Endpoints", () => {
         const response: Response = await request(app)
           .post("/api/custom_exercise")
           .set("Authorization", `Bearer ${token}`)
-          .send({
-            ...custom_exercise,
-            muscles: [
-              {
-                muscleID: "1",
-                muscleType: muscleType.PRIMARY,
-              },
-            ],
-          });
+          .field("name", custom_exercise.name)
+          .field("exerciseType", custom_exercise.exerciseType)
+          .field(
+            "muscles",
+            JSON.stringify([
+              { muscleID: "123", muscleType: muscleType.PRIMARY },
+            ]),
+          );
 
         expect(response.status).toBe(400);
         expect(response.body.message).toEqual("Muscle not found");

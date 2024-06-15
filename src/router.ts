@@ -1,4 +1,5 @@
 import { Router } from "express";
+import multer from "multer";
 import { createFolder, deleteFolder, getFolders } from "./handlers/folder";
 import {
   createExercise,
@@ -50,6 +51,7 @@ import {
 import { validateMuscleInput } from "./middlewares/validateMuscleInput";
 import { validateCustomMuscleInput } from "./middlewares/validateCustomMuscleInput";
 
+const upload = multer();
 const router = Router();
 
 //user
@@ -71,7 +73,12 @@ router.delete("/exercise/:id", deleteExercise);
 // custom_exercises
 router.get("/custom_exercises", getCustomExercises);
 router.get("/custom_exercise/:id", getCustomExercise);
-router.post("/custom_exercise", validateExerciseInput, createCustomExercise);
+router.post(
+  "/custom_exercise",
+  upload.single("image"),
+  validateExerciseInput,
+  createCustomExercise,
+);
 router.delete("/custom_exercise/:id", deleteCustomExercise);
 
 // muscles

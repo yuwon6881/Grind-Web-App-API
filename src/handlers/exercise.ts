@@ -76,7 +76,7 @@ export const createExercise = async (
         });
 
         const muscles: { muscleID: string; muscleType: muscleType }[] =
-          req.body.muscles;
+          JSON.parse(req.body.muscles);
 
         const transaction_promises = muscles.map(async (muscle) => {
           const muscleExists = await prisma.muscle.findUnique({

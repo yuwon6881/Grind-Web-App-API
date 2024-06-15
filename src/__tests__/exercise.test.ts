@@ -75,9 +75,9 @@ describe("Exercise Endpoints", () => {
           .set("Authorization", `Bearer ${token}`)
           .send({
             ...exercise,
-            muscles: [
+            muscles: JSON.stringify([
               { muscleID: createdMuscle.id, muscleType: muscleType.PRIMARY },
-            ],
+            ]),
           });
 
         expect(response.status).toBe(200);
@@ -91,7 +91,9 @@ describe("Exercise Endpoints", () => {
           .set("Authorization", `Bearer ${token}`)
           .send({
             ...exercise,
-            muscles: [{ muscleID: "1", muscleType: muscleType.PRIMARY }],
+            muscles: JSON.stringify([
+              { muscleID: "123", muscleType: muscleType.PRIMARY },
+            ]),
           });
 
         expect(response.status).toBe(400);

@@ -16,3 +16,4 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkxMTg5N2ZjL
     "exerciseType": "BARBELL",
     "muscles": [{"muscleID":"b7879b7d-376d-479f-94f6-e7ae0b9d6882","muscleType":"PRIMARY"}]
 }
+ 

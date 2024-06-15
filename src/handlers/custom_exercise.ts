@@ -84,12 +84,13 @@ export const createCustomExercise = async (
               name: req.body.name,
               exerciseType: req.body.exerciseType,
               user_id: req.user!.id,
+              image: req.file ? req.file.buffer : null,
             },
           },
         );
 
         const muscles: { muscleID: string; muscleType: muscleType }[] =
-          req.body.muscles;
+          JSON.parse(req.body.muscles);
 
         const transaction_promises = muscles.map(async (muscle) => {
           const muscleExists = await prisma.muscle.findUnique({

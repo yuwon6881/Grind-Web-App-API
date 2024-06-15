@@ -11,6 +11,7 @@ export const validateExerciseInput = [
     "BODYWEIGHT",
     "DURATION",
   ]),
-  body("muscles").isArray().notEmpty(),
+  body("muscles.*.muscleID").isUUID(),
+  body("muscles.*.muscleType").isIn(["PRIMARY", "SECONDARY"]),
   handleInputErrors,
 ];
