@@ -1,6 +1,7 @@
 import { Exercise, muscleType } from "@prisma/client";
 import prisma from "../db";
 import { Request, Response, NextFunction } from "express";
+import { fromBuffer } from "file-type";
 
 // get all exercises
 export const getExercises = async (
@@ -23,7 +24,25 @@ export const getExercises = async (
         },
       },
     });
-    res.json({ success: true, data: exercises });
+
+    const exercisesWithBase64 = await Promise.all(
+      exercises.map(async (exercise) => {
+        if (exercise.image) {
+          const buffer = exercise.image;
+          const type = await fromBuffer(buffer);
+
+          if (type) {
+            const imageBase64 = `data:${type.mime};base64,${buffer.toString(
+              "base64",
+            )}`;
+            return { ...exercise, image: imageBase64 };
+          }
+        }
+        return exercise;
+      }),
+    );
+
+    res.json({ success: true, data: exercisesWithBase64 });
   } catch (error: unknown) {
     if (error instanceof Error) {
       error.message = "Failed to get exercises";
