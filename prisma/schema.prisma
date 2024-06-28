@@ -52,6 +52,7 @@ enum status {
 enum set_type {
   NORMAL
   DROPSET
+  WARMUP
   LONG_LENGTH_PARTIAL
 }
 
