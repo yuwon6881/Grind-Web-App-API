@@ -1,6 +1,11 @@
 import { Router } from "express";
 import multer from "multer";
-import { createFolder, deleteFolder, getFolders } from "./handlers/folder";
+import {
+  createFolder,
+  deleteFolder,
+  getDefaultFolder,
+  getFolders,
+} from "./handlers/folder";
 import {
   createExercise,
   deleteExercise,
@@ -95,6 +100,7 @@ router.delete("/custom_muscle/:id", deleteCustomMuscle);
 
 // folders
 router.get("/folders", getFolders);
+router.get("/defaultFolder", getDefaultFolder);
 router.post("/folder", validateFolderInput, createFolder);
 router.delete("/folder/:id", deleteFolder);
 

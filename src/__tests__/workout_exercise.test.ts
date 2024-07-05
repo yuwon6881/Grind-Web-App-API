@@ -66,6 +66,7 @@ describe("Workout Exercise Endpoints", () => {
             exercise_id: exercise.id,
             reps: 10,
             weight: 100,
+            set_uuid: "uuid1",
           },
         });
         await prisma.workout_Exercise.create({

@@ -159,6 +159,7 @@ model Workout_Sets {
   workout_id         String
   exercise_id        String?
   custom_exercise_id String?
+  set_uuid           String           @unique
   Workout            Workout          @relation(fields: [workout_id], references: [id], onDelete: Cascade)
   Exercise           Exercise?        @relation(fields: [exercise_id], references: [id], onDelete: Cascade)
   Custom_Exercise    Custom_Exercise? @relation(fields: [custom_exercise_id], references: [id], onDelete: Cascade)
@@ -252,6 +253,7 @@ model Routine_Set {
   routine_id         String
   exercise_id        String?
   custom_exercise_id String?
+  set_uuid           String           @unique
   Routine            Routine          @relation(fields: [routine_id], references: [id], onDelete: Cascade)
   Exercise           Exercise?        @relation(fields: [exercise_id], references: [id], onDelete: Cascade)
   Custom_Exercise    Custom_Exercise? @relation(fields: [custom_exercise_id], references: [id], onDelete: Cascade)

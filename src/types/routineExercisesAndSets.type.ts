@@ -15,4 +15,5 @@ export type Set = {
   rpe: number;
   index: number;
   set_type: set_type;
+  set_uuid: string;
 };

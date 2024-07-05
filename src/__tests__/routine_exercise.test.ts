@@ -58,6 +58,7 @@ describe("Routine Exercise Endpoints", () => {
             weight: 100,
             rpe: 9,
             index: 0,
+            set_uuid: "uuid4",
           },
         });
 

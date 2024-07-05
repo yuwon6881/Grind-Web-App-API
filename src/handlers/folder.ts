@@ -26,6 +26,30 @@ export const getFolders = async (
   }
 };
 
+//Get default folder for a user
+export const getDefaultFolder = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const folder = await prisma.folder.findFirst({
+      where: {
+        user_id: req.user!.id,
+        name: "SystemDefault",
+        index: -1,
+      },
+    });
+
+    res.json({ success: true, data: folder });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      error.message = "Failed to get default folder";
+      next(error);
+    }
+  }
+};
+
 //Create a folder for a user
 export const createFolder = async (
   req: Request,
