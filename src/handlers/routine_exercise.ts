@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import prisma from "../db";
-import { ExercisesAndSets } from "../types/routineExercisesAndSets.type";
+import { RoutineExercisesAndSets } from "../types/routineExercisesAndSets.type";
 export const getRoutineExercises = async (
   req: Request,
   res: Response,
@@ -92,17 +92,21 @@ export const createRoutineExercise = async (
       });
 
       await Promise.all(
-        req.body.exercises.map(async (exercise: ExercisesAndSets) => {
+        req.body.exercises.map(async (exercise: RoutineExercisesAndSets) => {
           const data = {
             routine_id: req.params.routine_id,
             index: exercise.index,
             rest_timer: exercise.rest_timer,
             note: exercise.note,
+            routine_uuid: exercise.routine_uuid,
           };
 
           if (exercise.exercise_id) {
             await prisma.routine_Exercise.create({
-              data: { ...data, exercise_id: exercise.exercise_id },
+              data: {
+                ...data,
+                exercise_id: exercise.exercise_id,
+              },
             });
             await prisma.routine_Set.createMany({
               data: exercise.sets.map((set) => ({

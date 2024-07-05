@@ -119,25 +119,27 @@ model Workout {
 model Workout_Custom_Exercise {
   workout_id         String
   custom_exercise_id String
+  workout_uuid       String
   index              Int             @default(0)
   rest_timer         Float?
   note               String?
   Workout            Workout         @relation(fields: [workout_id], references: [id], onDelete: Cascade)
   Custom_Exercise    Custom_Exercise @relation(fields: [custom_exercise_id], references: [id], onDelete: Cascade)
 
-  @@id([workout_id, custom_exercise_id])
+  @@id([workout_id, custom_exercise_id, workout_uuid])
 }
 
 model Workout_Exercise {
-  workout_id  String
-  exercise_id String
-  index       Int      @default(0)
-  rest_timer  Float?
-  note        String?
-  Workout     Workout  @relation(fields: [workout_id], references: [id], onDelete: Cascade)
-  Exercise    Exercise @relation(fields: [exercise_id], references: [id], onDelete: Cascade)
+  workout_id   String
+  exercise_id  String
+  workout_uuid String
+  index        Int      @default(0)
+  rest_timer   Float?
+  note         String?
+  Workout      Workout  @relation(fields: [workout_id], references: [id], onDelete: Cascade)
+  Exercise     Exercise @relation(fields: [exercise_id], references: [id], onDelete: Cascade)
 
-  @@id([workout_id, exercise_id])
+  @@id([workout_id, exercise_id, workout_uuid])
 }
 
 model Workout_Superset {
@@ -214,25 +216,27 @@ model Exercise {
 model Routine_Custom_Exercise {
   routine_id         String
   custom_exercise_id String
+  routine_uuid       String
   index              Int             @default(0)
   rest_timer         Float?
   note               String?
   Routine            Routine         @relation(fields: [routine_id], references: [id], onDelete: Cascade)
   Custom_Exercise    Custom_Exercise @relation(fields: [custom_exercise_id], references: [id], onDelete: Cascade)
 
-  @@id([routine_id, custom_exercise_id])
+  @@id([routine_id, custom_exercise_id, routine_uuid])
 }
 
 model Routine_Exercise {
-  routine_id  String
-  exercise_id String
-  index       Int      @default(0)
-  rest_timer  Float?
-  note        String?
-  Routine     Routine  @relation(fields: [routine_id], references: [id], onDelete: Cascade)
-  Exercise    Exercise @relation(fields: [exercise_id], references: [id], onDelete: Cascade)
+  routine_id   String
+  exercise_id  String
+  routine_uuid String
+  index        Int      @default(0)
+  rest_timer   Float?
+  note         String?
+  Routine      Routine  @relation(fields: [routine_id], references: [id], onDelete: Cascade)
+  Exercise     Exercise @relation(fields: [exercise_id], references: [id], onDelete: Cascade)
 
-  @@id([routine_id, exercise_id])
+  @@id([routine_id, exercise_id, routine_uuid])
 }
 
 model Routine_Superset {

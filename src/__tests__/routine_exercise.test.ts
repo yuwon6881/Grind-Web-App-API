@@ -69,6 +69,7 @@ describe("Routine Exercise Endpoints", () => {
             index: 0,
             rest_timer: 0,
             note: "note1",
+            routine_uuid: "uuid1",
           },
         });
         await prisma.routine_Custom_Exercise.create({
@@ -78,6 +79,7 @@ describe("Routine Exercise Endpoints", () => {
             index: 0,
             rest_timer: 0,
             note: "note1",
+            routine_uuid: "uuid2",
           },
         });
         return [routine, exercise, custom_exercise, routine_set];

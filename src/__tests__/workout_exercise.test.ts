@@ -76,6 +76,7 @@ describe("Workout Exercise Endpoints", () => {
             index: 0,
             rest_timer: 0,
             note: "note1",
+            workout_uuid: "uuid1",
           },
         });
         await prisma.workout_Custom_Exercise.create({
@@ -85,6 +86,7 @@ describe("Workout Exercise Endpoints", () => {
             index: 0,
             rest_timer: 0,
             note: "note1",
+            workout_uuid: "uuid2",
           },
         });
 

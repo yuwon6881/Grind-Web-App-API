@@ -40,6 +40,7 @@ export function addRoutineExerciseAndCustomExerciseWithSets(
     exercises: [
       {
         exercise_id: exercise_id,
+        routine_uuid: "uuid1",
         index: 0,
         rest_timer: 0,
         note: "note1",
@@ -64,6 +65,7 @@ export function addRoutineExerciseAndCustomExerciseWithSets(
       },
       {
         custom_exercise_id: custom_exercise_id,
+        routine_uuid: "uuid2",
         index: 0,
         rest_timer: 0,
         note: "note1",
@@ -90,6 +92,7 @@ export const addWorkoutExerciseAndCustomExerciseWithSets = (
     exercises: [
       {
         exercise_id: exercise_id,
+        workout_uuid: "uuid1",
         index: 0,
         rest_timer: 0,
         note: "note1",
@@ -114,6 +117,7 @@ export const addWorkoutExerciseAndCustomExerciseWithSets = (
       },
       {
         custom_exercise_id: custom_exercise_id,
+        workout_uuid: "uuid2",
         index: 0,
         rest_timer: 0,
         note: "note1",
