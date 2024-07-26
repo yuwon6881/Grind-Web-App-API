@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
 import config from "../config";
 import { User } from "@prisma/client";
+import { UserWithoutProfilePicture } from "../types/User.type";
 
 //Compare passwords
 
@@ -36,14 +37,13 @@ export const hashPassword = async (password: string): Promise<string> => {
 };
 
 //Create JWT
-export const createJWT = (user: User): string => {
+export const createJWT = (user: UserWithoutProfilePicture): string => {
   const token = jwt.sign(
     {
       id: user.id,
       name: user.name,
       email: user.email,
       role: user.role,
-      profilePicture: user.profilePicture,
     },
     config.secrets.jwt as Secret,
   );

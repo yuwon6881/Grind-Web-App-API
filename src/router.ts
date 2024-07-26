@@ -16,7 +16,13 @@ import { validateExerciseInput } from "./middlewares/validateExerciseInput";
 import { validateFolderInput } from "./middlewares/validateFolderInput";
 import { validateSettingInput } from "./middlewares/validateSettingInput";
 import { getSetting, updateSetting } from "./handlers/setting";
-import { deleteUser, getUser, getUsers, userSignOut } from "./handlers/user";
+import {
+  deleteUser,
+  getUser,
+  getUsers,
+  updateUser,
+  userSignOut,
+} from "./handlers/user";
 import { errorHandler } from "./middlewares/errorhandler";
 import { validateFolderRoutineInput } from "./middlewares/validateFolderRoutineInput";
 import { deleteRoutine, getRoutines } from "./handlers/routines";
@@ -55,6 +61,7 @@ import {
 } from "./handlers/custom_muscle";
 import { validateMuscleInput } from "./middlewares/validateMuscleInput";
 import { validateCustomMuscleInput } from "./middlewares/validateCustomMuscleInput";
+import { validateUpdateUserInput } from "./middlewares/validateUpdateUserInput";
 
 const upload = multer();
 const router = Router();
@@ -64,6 +71,12 @@ router.post("/userSignOut", userSignOut);
 router.get("/user", getUser);
 router.get("/users", getUsers);
 router.delete("/user", deleteUser);
+router.put(
+  "/user",
+  upload.single("profilePicture"),
+  validateUpdateUserInput,
+  updateUser,
+);
 
 // settings
 router.get("/setting", getSetting);

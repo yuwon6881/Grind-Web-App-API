@@ -2,6 +2,7 @@ import prisma from "../db";
 import { NextFunction, Request, Response } from "express";
 import { comparePasswords, createJWT, hashPassword } from "../modules/auth";
 import { Folder, Settings, User } from "@prisma/client";
+import { fromBuffer } from "file-type";
 
 //Create New User
 
@@ -153,17 +154,47 @@ export const userSignOut = async (
 };
 
 //Get User
-export const getUser = (
+export const getUser = async (
   req: Request,
   res: Response,
   next: NextFunction,
-): void => {
+) => {
   try {
-    const user = req.user;
+    const requestUser = req.user;
+    if (!requestUser) {
+      throw new Error();
+    }
+    const user = await prisma.user.findUnique({
+      where: {
+        id: requestUser.id,
+      },
+      select: {
+        id: false,
+        name: false,
+        email: false,
+        role: false,
+        createdAt: false,
+        profilePicture: true,
+      },
+    });
+
     if (!user) {
       throw new Error();
     }
-    res.json({ success: true, data: user });
+
+    if (user.profilePicture) {
+      const buffer = user.profilePicture;
+      const type = await fromBuffer(buffer);
+
+      if (type) {
+        const imageBase64 = `data:${type.mime};base64,${buffer.toString(
+          "base64",
+        )}`;
+        requestUser.profilePicture = imageBase64;
+      }
+    }
+
+    res.json({ success: true, data: requestUser });
   } catch (error: unknown) {
     if (error instanceof Error) {
       error.message = "Failed to get user";
@@ -185,6 +216,54 @@ export const getUsers = async (
     if (error instanceof Error) {
       error.message = "Failed to get users";
       next(error);
+    }
+  }
+};
+
+//Update User
+export const updateUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const user = await prisma.user.update({
+      where: {
+        id: req.user!.id,
+      },
+      data: {
+        name: req.body.name,
+        profilePicture: req.file ? req.file.buffer : null,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        password: true,
+        role: true,
+        createdAt: true,
+        profilePicture: false,
+      },
+    });
+    if (user) {
+      const token = createJWT(user);
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 3600000,
+      });
+      res.json({ success: true, data: user });
+    }
+  } catch (error: unknown) {
+    const customError = error as Error & { code: string };
+    if (customError instanceof Error) {
+      if (customError.code === "P2025") {
+        customError.name = "notFound";
+        customError.message = "User not found";
+      } else {
+        customError.message = "Failed to update user";
+      }
+      next(customError);
     }
   }
 };

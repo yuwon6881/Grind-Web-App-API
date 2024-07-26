@@ -139,7 +139,8 @@ describe("getUser", () => {
   describe("when request is valid", () => {
     it("should return user", async () => {
       request.user = user;
-      getUser(request, response, next);
+      prismaMock.user.findUnique.mockResolvedValue(user);
+      await getUser(request, response, next);
       expect(response.json).toHaveBeenCalledWith(
         expect.objectContaining({ success: true, data: user }),
       );

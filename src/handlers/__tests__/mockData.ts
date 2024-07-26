@@ -219,6 +219,7 @@ export const nestedRoutineExercises: MockRoutineExerciseAndCustomExercise[] = [
     Routine_Exercise: [
       {
         routine_id: "1",
+        routine_uuid: "1",
         exercise_id: "1",
         index: 0,
         rest_timer: 0,
@@ -227,6 +228,7 @@ export const nestedRoutineExercises: MockRoutineExerciseAndCustomExercise[] = [
       },
       {
         routine_id: "1",
+        routine_uuid: "1",
         exercise_id: "1",
         index: 0,
         rest_timer: 0,
@@ -237,6 +239,7 @@ export const nestedRoutineExercises: MockRoutineExerciseAndCustomExercise[] = [
     Routine_Custom_Exercise: [
       {
         routine_id: "1",
+        routine_uuid: "1",
         custom_exercise_id: "1",
         index: 0,
         rest_timer: 0,
@@ -253,6 +256,7 @@ export const nestedWorkoutExercises: MockWorkoutExerciseAndCustomExercise[] = [
     Workout_Exercise: [
       {
         workout_id: "1",
+        workout_uuid: "1",
         exercise_id: "1",
         index: 0,
         rest_timer: 0,
@@ -261,6 +265,7 @@ export const nestedWorkoutExercises: MockWorkoutExerciseAndCustomExercise[] = [
       },
       {
         workout_id: "1",
+        workout_uuid: "1",
         exercise_id: "1",
         index: 0,
         rest_timer: 0,
@@ -271,6 +276,7 @@ export const nestedWorkoutExercises: MockWorkoutExerciseAndCustomExercise[] = [
     Workout_Custom_Exercise: [
       {
         workout_id: "1",
+        workout_uuid: "1",
         custom_exercise_id: "1",
         index: 0,
         rest_timer: 0,
@@ -283,6 +289,7 @@ export const nestedWorkoutExercises: MockWorkoutExerciseAndCustomExercise[] = [
 
 export const routine_exercise: Routine_Exercise = {
   routine_id: routine.id,
+  routine_uuid: routine.id,
   exercise_id: exercises[0].id,
   index: 0,
   rest_timer: null,
@@ -291,6 +298,7 @@ export const routine_exercise: Routine_Exercise = {
 
 export const routine_custom_exercise: Routine_Custom_Exercise = {
   routine_id: routine.id,
+  routine_uuid: routine.id,
   custom_exercise_id: custom_exercise.id,
   index: 0,
   rest_timer: null,
