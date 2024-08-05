@@ -227,13 +227,20 @@ export const updateUser = async (
   next: NextFunction,
 ) => {
   try {
+    const defaultUserFields = await prisma.user.findUnique({
+      where: {
+        id: req.user!.id,
+      },
+    });
     const user = await prisma.user.update({
       where: {
         id: req.user!.id,
       },
       data: {
         name: req.body.name,
-        profilePicture: req.file ? req.file.buffer : null,
+        profilePicture: req.file
+          ? req.file.buffer
+          : defaultUserFields!.profilePicture,
       },
       select: {
         id: true,
