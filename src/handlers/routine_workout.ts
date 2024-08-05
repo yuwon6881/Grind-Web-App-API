@@ -32,9 +32,15 @@ export const createRoutineWorkouts = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
+    const routine = await prisma.routine.findUnique({
+      where: {
+        id: req.params.id,
+      },
+    });
     const workout = await prisma.workout.create({
       data: {
         routine_id: req.params.id,
+        name: routine!.name,
       },
     });
 

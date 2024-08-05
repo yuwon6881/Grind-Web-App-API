@@ -106,6 +106,7 @@ model Workout {
   id                      String                    @id @default(uuid())
   start_date              DateTime                  @default(now())
   end_date                DateTime?
+  name                    String
   duration                Float?
   status                  status                    @default(IN_PROGRESS)
   routine_id              String

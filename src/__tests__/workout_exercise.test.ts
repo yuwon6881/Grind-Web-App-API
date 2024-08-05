@@ -57,6 +57,7 @@ describe("Workout Exercise Endpoints", () => {
         workout = await prisma.workout.create({
           data: {
             routine_id: routine.id,
+            name: routine.name,
           },
         });
 
