@@ -16,9 +16,21 @@ export const getWorkouts = async (
           include: {
             Workout: {
               include: {
-                Workout_Exercise: true,
-                Workout_Custom_Exercise: true,
-                Workout_Sets: true,
+                Workout_Exercise: {
+                  include: {
+                    Exercise: true,
+                  },
+                },
+                Workout_Custom_Exercise: {
+                  include: {
+                    Custom_Exercise: true,
+                  },
+                },
+                Workout_Sets: {
+                  include: {
+                    Personal_Record: true,
+                  },
+                },
               },
             },
           },

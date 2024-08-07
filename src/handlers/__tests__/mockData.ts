@@ -143,6 +143,7 @@ export const settings = {
 
 export const workout: Workout = {
   id: "1",
+  name: "workout1",
   start_date: new Date(),
   end_date: null,
   duration: null,

@@ -1,6 +1,6 @@
 import { prismaMock } from "../../singleton";
 import { createRoutineWorkouts, getRoutineWorkouts } from "../routine_workout";
-import { nestedWorkouts, workout } from "./mockData";
+import { nestedWorkouts, routine, workout } from "./mockData";
 import { request, response, next } from "./mocks";
 
 describe("getRoutineWorkouts", () => {
@@ -34,6 +34,7 @@ describe("createRoutineWorkout", () => {
   describe("when request is valid", () => {
     it("should return list of workouts for the routine", async () => {
       request.params = { id: "1" };
+      prismaMock.routine.findUnique.mockResolvedValueOnce(routine);
       prismaMock.workout.create.mockResolvedValueOnce(workout);
       await createRoutineWorkouts(request, response, next);
       expect(response.json).toHaveBeenCalledWith(
