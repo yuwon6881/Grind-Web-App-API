@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import prisma from "../db";
+import { fromBuffer } from "file-type";
 
 export const getWorkouts = async (
   req: Request,
@@ -37,10 +38,68 @@ export const getWorkouts = async (
         },
       },
     });
+
     const workouts = workoutQuery.flatMap((folder) =>
       folder.Routine.flatMap((routine) => routine.Workout),
     );
-    res.json({ success: true, data: workouts });
+
+    const workoutsWithBase64 = await Promise.all(
+      workouts.map(async (workout) => {
+        const customExercisesWithBase64 = await Promise.all(
+          workout.Workout_Custom_Exercise.map(async (customExercise) => {
+            if (customExercise.Custom_Exercise.image) {
+              const buffer = customExercise.Custom_Exercise.image;
+              const type = await fromBuffer(buffer);
+
+              if (type) {
+                const imageBase64 = `data:${type.mime};base64,${buffer.toString(
+                  "base64",
+                )}`;
+                return {
+                  ...customExercise,
+                  Custom_Exercise: {
+                    ...customExercise.Custom_Exercise,
+                    image: imageBase64,
+                  },
+                };
+              }
+            }
+            return customExercise;
+          }),
+        );
+
+        const exercisesWithBase64 = await Promise.all(
+          workout.Workout_Exercise.map(async (exercise) => {
+            if (exercise.Exercise.image) {
+              const buffer = exercise.Exercise.image;
+              const type = await fromBuffer(buffer);
+
+              if (type) {
+                const imageBase64 = `data:${type.mime};base64,${buffer.toString(
+                  "base64",
+                )}`;
+                return {
+                  ...exercise,
+                  Exercise: {
+                    ...exercise.Exercise,
+                    image: imageBase64,
+                  },
+                };
+              }
+            }
+            return exercise;
+          }),
+        );
+
+        return {
+          ...workout,
+          Workout_Custom_Exercise: customExercisesWithBase64,
+          Workout_Exercise: exercisesWithBase64,
+        };
+      }),
+    );
+
+    res.json({ success: true, data: workoutsWithBase64 });
   } catch (error: unknown) {
     if (error instanceof Error) {
       error.message = "Error retrieving workouts";

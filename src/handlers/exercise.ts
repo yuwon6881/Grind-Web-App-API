@@ -58,9 +58,26 @@ export const getExercise = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
+    let exercisesWithBase64;
     const exercise = await prisma.exercise.findUnique({
       where: {
         id: req.params.id,
+      },
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        exerciseType: true,
+        Exercise_Muscle: {
+          select: {
+            muscleType: true,
+            Muscle: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
       },
     });
     if (!exercise) {
@@ -69,7 +86,19 @@ export const getExercise = async (
       error.name = "inputError";
       throw error;
     }
-    res.json({ success: true, data: exercise });
+    exercisesWithBase64 = { ...exercise };
+
+    if (exercise.image) {
+      const buffer = exercise.image;
+      const type = await fromBuffer(buffer);
+      if (type) {
+        const imageBase64 = `data:${type.mime};base64,${buffer.toString(
+          "base64",
+        )}`;
+        exercisesWithBase64 = { ...exercise, image: imageBase64 };
+      }
+    }
+    res.json({ success: true, data: exercisesWithBase64 });
   } catch (error: unknown) {
     if (error instanceof Error) {
       error.message = error.message || "Failed to get exercise";
