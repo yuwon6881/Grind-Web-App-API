@@ -78,6 +78,17 @@ export const getCustomExercise = async (
         name: true,
         exerciseType: true,
         image: true,
+        Workout_Sets: {
+          select: {
+            weight: true,
+            reps: true,
+            Workout: {
+              select: {
+                start_date: true,
+              },
+            },
+          },
+        },
         Custom_Muscle_Custom_Exercise: {
           select: {
             muscleType: true,
@@ -115,7 +126,18 @@ export const getCustomExercise = async (
         )}`;
         exercisesWithBase64 = { ...custom_Exercise, image: imageBase64 };
       }
+    } else {
+      exercisesWithBase64 = custom_Exercise;
     }
+
+    if (exercisesWithBase64!.Workout_Sets) {
+      exercisesWithBase64!.Workout_Sets.sort((a, b) => {
+        const dateA = new Date(a.Workout.start_date);
+        const dateB = new Date(b.Workout.start_date);
+        return dateA.getTime() - dateB.getTime();
+      });
+    }
+
     res.json({ success: true, data: exercisesWithBase64 });
   } catch (error: unknown) {
     if (error instanceof Error) {
