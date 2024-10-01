@@ -82,6 +82,7 @@ export const getCustomExercise = async (
           select: {
             weight: true,
             reps: true,
+            volume: true,
             Workout: {
               select: {
                 start_date: true,
