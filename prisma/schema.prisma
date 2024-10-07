@@ -193,7 +193,6 @@ model Custom_Exercise {
   Custom_Muscle_Custom_Exercise Custom_Muscle_Custom_Exercise[]
   Custom_Exercise_Muscle        Custom_Exercise_Muscle[]
   Routine_Custom_Exercise       Routine_Custom_Exercise[]
-  Routine_Superset              Routine_Superset[]
   Routine_Set                   Routine_Set[]
   Workout_Custom_Exercise       Workout_Custom_Exercise[]
   Workout_Superset              Workout_Superset[]
@@ -205,7 +204,6 @@ model Exercise {
   name             String
   image            Bytes?
   exerciseType     exerciseType
-  Routine_Superset Routine_Superset[]
   Exercise_Muscle  Exercise_Muscle[]
   Routine_Exercise Routine_Exercise[]
   Routine_Set      Routine_Set[]
@@ -215,37 +213,55 @@ model Exercise {
 }
 
 model Routine_Custom_Exercise {
-  routine_id         String
-  custom_exercise_id String
-  routine_uuid       String
-  index              Int             @default(0)
-  rest_timer         Float?
-  note               String?
-  Routine            Routine         @relation(fields: [routine_id], references: [id], onDelete: Cascade)
-  Custom_Exercise    Custom_Exercise @relation(fields: [custom_exercise_id], references: [id], onDelete: Cascade)
+  routine_id                     String
+  custom_exercise_id             String
+  routine_uuid                   String                          @unique
+  index                          Int                             @default(0)
+  rest_timer                     Float?
+  note                           String?
+  Routine                        Routine                         @relation(fields: [routine_id], references: [id], onDelete: Cascade)
+  Custom_Exercise                Custom_Exercise                 @relation(fields: [custom_exercise_id], references: [id], onDelete: Cascade)
+  RoutineSuperset_CustomExercise RoutineSuperset_CustomExercise?
 
   @@id([routine_id, custom_exercise_id, routine_uuid])
 }
 
 model Routine_Exercise {
-  routine_id   String
-  exercise_id  String
-  routine_uuid String
-  index        Int      @default(0)
-  rest_timer   Float?
-  note         String?
-  Routine      Routine  @relation(fields: [routine_id], references: [id], onDelete: Cascade)
-  Exercise     Exercise @relation(fields: [exercise_id], references: [id], onDelete: Cascade)
+  routine_id               String
+  exercise_id              String
+  routine_uuid             String                    @unique
+  index                    Int                       @default(0)
+  rest_timer               Float?
+  note                     String?
+  Routine                  Routine                   @relation(fields: [routine_id], references: [id], onDelete: Cascade)
+  Exercise                 Exercise                  @relation(fields: [exercise_id], references: [id], onDelete: Cascade)
+  RoutineSuperset_Exercise RoutineSuperset_Exercise?
 
   @@id([routine_id, exercise_id, routine_uuid])
 }
 
+model RoutineSuperset_Exercise {
+  id               String            @id @default(uuid())
+  supersets_id     String
+  routine_uuid     String            @unique
+  Routine_Exercise Routine_Exercise? @relation(fields: [routine_uuid], references: [routine_uuid], onDelete: Cascade)
+  belongsTo        Routine_Superset  @relation(fields: [supersets_id], references: [id], onDelete: Cascade)
+}
+
+model RoutineSuperset_CustomExercise {
+  id                      String                   @id @default(uuid())
+  supersets_id            String
+  routine_uuid            String                   @unique
+  Routine_Custom_Exercise Routine_Custom_Exercise? @relation(fields: [routine_uuid], references: [routine_uuid], onDelete: Cascade)
+  belongsTo               Routine_Superset         @relation(fields: [supersets_id], references: [id], onDelete: Cascade)
+}
+
 model Routine_Superset {
-  id              String            @id @default(uuid())
-  routine_id      String
-  Exercises       Exercise[]
-  Custom_Exercise Custom_Exercise[]
-  belongsTo       Routine           @relation(fields: [routine_id], references: [id], onDelete: Cascade)
+  id                             String                           @id @default(uuid())
+  routine_id                     String
+  RoutineSuperset_Exercise       RoutineSuperset_Exercise[]
+  RoutineSuperset_CustomExercise RoutineSuperset_CustomExercise[]
+  belongsTo                      Routine                          @relation(fields: [routine_id], references: [id], onDelete: Cascade)
 }
 
 model Routine_Set {

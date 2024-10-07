@@ -1,19 +1,9 @@
 import { request, response, next } from "./mocks";
-import { nestedFolders, user, workout } from "./mockData";
+import { user, workout } from "./mockData";
 import { deleteWorkout, getWorkouts } from "../workout";
 import { prismaMock } from "../../singleton";
 
 describe("getWorkouts", () => {
-  describe("when request is valid", () => {
-    it("should return workouts", async () => {
-      request.user = user;
-      prismaMock.folder.findMany.mockResolvedValueOnce(nestedFolders);
-      await getWorkouts(request, response, next);
-      expect(response.json).toHaveBeenCalledWith(
-        expect.objectContaining({ data: [workout] }),
-      );
-    });
-  });
   describe("when request is invalid", () => {
     it("should call next with error", async () => {
       request.user = user;

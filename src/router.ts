@@ -62,6 +62,10 @@ import {
 import { validateMuscleInput } from "./middlewares/validateMuscleInput";
 import { validateCustomMuscleInput } from "./middlewares/validateCustomMuscleInput";
 import { validateUpdateUserInput } from "./middlewares/validateUpdateUserInput";
+import {
+  createRoutineSuperset,
+  getRoutineSupersets,
+} from "./handlers/routine_superset";
 
 const upload = multer();
 const router = Router();
@@ -148,6 +152,10 @@ router.delete("/workout/:id", deleteWorkout);
 // routine_workout
 router.get("/routine/:id/workouts", getRoutineWorkouts);
 router.post("/routine/:id/workout", createRoutineWorkouts);
+
+// routine_superset
+router.get("/routine/:id/superset", getRoutineSupersets);
+router.post("/routine/:id/superset", createRoutineSuperset);
 
 router.use(errorHandler);
 

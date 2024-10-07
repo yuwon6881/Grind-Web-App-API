@@ -21,10 +21,6 @@ import {
   Custom_Muscle,
 } from "@prisma/client";
 
-type MockFolder = Prisma.FolderGetPayload<{
-  include: { Routine: { include: { Workout: true } } };
-}>;
-
 type MockRoutine = Prisma.RoutineGetPayload<{
   include: { Workout: true };
 }>;
@@ -158,24 +154,6 @@ export const custom_exercise: Custom_Exercise = {
   exerciseType: exerciseType.BARBELL,
   user_id: user.id,
 };
-
-export const nestedFolders: MockFolder[] = [
-  {
-    id: "1",
-    name: "folder1",
-    index: 0,
-    user_id: "1",
-    Routine: [
-      {
-        id: "1",
-        name: "routine1",
-        index: 0,
-        folder_id: "1",
-        Workout: [workout],
-      },
-    ],
-  },
-];
 
 export const muscle: Muscle = {
   id: "1",
