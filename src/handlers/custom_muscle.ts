@@ -6,7 +6,11 @@ export const getCustomMuscles = async (
   next: NextFunction,
 ) => {
   try {
-    const muscles = await prisma.custom_Muscle.findMany();
+    const muscles = await prisma.custom_Muscle.findMany({
+      where: {
+        user_id: req.user?.id,
+      },
+    });
     res.json({ success: true, data: muscles });
   } catch (error: unknown) {
     if (error instanceof Error) {

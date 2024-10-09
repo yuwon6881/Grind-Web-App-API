@@ -11,6 +11,9 @@ export const getCustomExercises = async (
 ): Promise<void> => {
   try {
     const custom_Exercises = await prisma.custom_Exercise.findMany({
+      where: {
+        user_id: req.user?.id,
+      },
       include: {
         Custom_Exercise_Muscle: {
           select: {
