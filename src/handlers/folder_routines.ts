@@ -28,3 +28,22 @@ export const createRoutine = async (
     }
   }
 };
+
+export const updateFolderRoutine = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { folder_id, routine_id } = req.params;
+    const updatedRoutine = await prisma.routine.update({
+      where: { id: routine_id },
+      data: { folder_id: folder_id },
+    });
+    res.json({ success: true, data: updatedRoutine });
+  } catch (error: unknown) {
+    const customError = error as Error;
+    customError.message = "Failed to update folder routine";
+    next(customError);
+  }
+};

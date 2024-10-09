@@ -55,7 +55,6 @@ export const createRoutineSuperset = async (
           }),
       );
 
-      console.log(Exercises, Custom_Exercises);
       const routineSuperset = await prisma.routine_Superset.create({
         data: {
           routine_id: routine_id,

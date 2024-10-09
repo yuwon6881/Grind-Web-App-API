@@ -26,7 +26,7 @@ import {
 import { errorHandler } from "./middlewares/errorhandler";
 import { validateFolderRoutineInput } from "./middlewares/validateFolderRoutineInput";
 import { deleteRoutine, getRoutines } from "./handlers/routines";
-import { createRoutine } from "./handlers/folder_routines";
+import { createRoutine, updateFolderRoutine } from "./handlers/folder_routines";
 import { deleteWorkout, getWorkouts } from "./handlers/workout";
 import {
   createRoutineWorkouts,
@@ -127,6 +127,7 @@ router.delete("/routine/:id", deleteRoutine);
 
 //folder_routines
 router.post("/folder/:id/routine", validateFolderRoutineInput, createRoutine);
+router.put("/folder/:folder_id/routine/:routine_id", updateFolderRoutine);
 
 // routine_exercise
 router.get("/routine/:id/exercises", getRoutineExercises);
