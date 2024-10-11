@@ -54,3 +54,33 @@ export const deleteRoutine = async (
     }
   }
 };
+
+export const updateRoutine = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const routineUpdates = req.body as { id: string; index: number }[];
+
+    const updatePromises = routineUpdates.map((routine) =>
+      prisma.routine.update({
+        where: {
+          id: routine.id,
+        },
+        data: {
+          index: routine.index,
+        },
+      }),
+    );
+
+    const updatedRoutines = await prisma.$transaction(updatePromises);
+
+    res.json({ success: true, data: updatedRoutines });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      error.message = "Failed to update routines";
+      next(error);
+    }
+  }
+};

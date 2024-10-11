@@ -100,3 +100,41 @@ export const deleteFolder = async (
     }
   }
 };
+
+//Update folders for a user
+export const updateFolder = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const folderUpdates = req.body as { id: string; index: number }[];
+
+    const updatePromises = folderUpdates.map((folder) =>
+      prisma.folder.update({
+        where: {
+          id: folder.id,
+          user_id: req.user!.id,
+        },
+        data: {
+          index: folder.index,
+        },
+      }),
+    );
+
+    const updatedFolders = await prisma.$transaction(updatePromises);
+
+    res.json({ success: true, data: updatedFolders });
+  } catch (error: unknown) {
+    const customError = error as Error & { code?: string };
+    if (customError instanceof Error) {
+      if (customError.code === "P2025") {
+        customError.name = "notFound";
+        customError.message = "One or more folders not found";
+      } else {
+        customError.message = "Failed to update folders";
+      }
+      next(customError);
+    }
+  }
+};

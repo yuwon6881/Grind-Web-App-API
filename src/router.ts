@@ -5,6 +5,7 @@ import {
   deleteFolder,
   getDefaultFolder,
   getFolders,
+  updateFolder,
 } from "./handlers/folder";
 import {
   createExercise,
@@ -25,7 +26,7 @@ import {
 } from "./handlers/user";
 import { errorHandler } from "./middlewares/errorhandler";
 import { validateFolderRoutineInput } from "./middlewares/validateFolderRoutineInput";
-import { deleteRoutine, getRoutines } from "./handlers/routines";
+import { deleteRoutine, getRoutines, updateRoutine } from "./handlers/routines";
 import { createRoutine, updateFolderRoutine } from "./handlers/folder_routines";
 import { deleteWorkout, getWorkouts } from "./handlers/workout";
 import {
@@ -119,10 +120,12 @@ router.delete("/custom_muscle/:id", deleteCustomMuscle);
 router.get("/folders", getFolders);
 router.get("/defaultFolder", getDefaultFolder);
 router.post("/folder", validateFolderInput, createFolder);
+router.put("/folder", updateFolder);
 router.delete("/folder/:id", deleteFolder);
 
 // routines
 router.get("/routines", getRoutines);
+router.put("/routine", updateRoutine);
 router.delete("/routine/:id", deleteRoutine);
 
 //folder_routines
