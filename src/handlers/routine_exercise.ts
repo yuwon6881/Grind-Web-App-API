@@ -126,7 +126,7 @@ export const createRoutineExercise = async (
               data: exercise.sets.map((set) => ({
                 ...set,
                 routine_id: req.params.routine_id,
-                custom_exercise_id: exercise.exercise_id,
+                custom_exercise_id: exercise.custom_exercise_id,
               })),
             });
           }
@@ -137,6 +137,41 @@ export const createRoutineExercise = async (
   } catch (error: unknown) {
     if (error instanceof Error) {
       error.message = error.message || "Error adding exercise to routine";
+      next(error);
+    }
+  }
+};
+
+export const deleteRoutineExercises = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    await prisma.routine_Exercise.deleteMany({
+      where: {
+        routine_id: req.params.routine_id,
+      },
+    });
+    await prisma.routine_Custom_Exercise.deleteMany({
+      where: {
+        routine_id: req.params.routine_id,
+      },
+    });
+    await prisma.routine_Set.deleteMany({
+      where: {
+        routine_id: req.params.routine_id,
+      },
+    });
+    await prisma.routine_Superset.deleteMany({
+      where: {
+        routine_id: req.params.routine_id,
+      },
+    });
+    res.json({ success: true });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      error.message = "Error deleting exercises";
       next(error);
     }
   }

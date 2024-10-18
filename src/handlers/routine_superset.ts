@@ -80,6 +80,8 @@ export const createRoutineSuperset = async (
         }),
       ]);
     });
+
+    res.json({ success: true });
   } catch (error) {
     next(error);
   }

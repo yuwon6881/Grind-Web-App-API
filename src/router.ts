@@ -26,7 +26,13 @@ import {
 } from "./handlers/user";
 import { errorHandler } from "./middlewares/errorhandler";
 import { validateFolderRoutineInput } from "./middlewares/validateFolderRoutineInput";
-import { deleteRoutine, getRoutines, updateRoutine } from "./handlers/routines";
+import {
+  deleteRoutine,
+  getRoutine,
+  getRoutines,
+  updateRoutine,
+  updateRoutineName,
+} from "./handlers/routines";
 import { createRoutine, updateFolderRoutine } from "./handlers/folder_routines";
 import { deleteWorkout, getWorkouts } from "./handlers/workout";
 import {
@@ -35,6 +41,7 @@ import {
 } from "./handlers/routine_workout";
 import {
   createRoutineExercise,
+  deleteRoutineExercises,
   getRoutineExercises,
 } from "./handlers/routine_exercise";
 import { validateRoutineExerciseInput } from "./middlewares/validateRoutineExerciseInput";
@@ -125,7 +132,9 @@ router.delete("/folder/:id", deleteFolder);
 
 // routines
 router.get("/routines", getRoutines);
+router.get("/routine/:id", getRoutine);
 router.put("/routine", updateRoutine);
+router.put("/routine/:id", updateRoutineName);
 router.delete("/routine/:id", deleteRoutine);
 
 //folder_routines
@@ -139,6 +148,7 @@ router.post(
   validateRoutineExerciseInput,
   createRoutineExercise,
 );
+router.delete("/routine/:routine_id/exercises", deleteRoutineExercises);
 
 // workout_exercises
 router.get("/workout/:id/exercises", getWorkoutExercises);

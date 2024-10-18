@@ -28,6 +28,55 @@ export const getRoutines = async (
   }
 };
 
+// get a routine
+export const getRoutine = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const routine = await prisma.routine.findUnique({
+      where: {
+        id: req.params.id,
+      },
+      include: {
+        Routine_Exercise: {
+          include: {
+            Exercise: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        Routine_Custom_Exercise: {
+          include: {
+            Custom_Exercise: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        Routine_Set: true,
+        Routine_Superset: {
+          include: {
+            RoutineSuperset_CustomExercise: true,
+            RoutineSuperset_Exercise: true,
+          },
+        },
+      },
+    });
+
+    res.json({ success: true, data: routine });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      error.message = "Failed to get routine";
+      next(error);
+    }
+  }
+};
+
 // delete a routine
 export const deleteRoutine = async (
   req: Request,
@@ -80,6 +129,32 @@ export const updateRoutine = async (
   } catch (error: unknown) {
     if (error instanceof Error) {
       error.message = "Failed to update routines";
+      next(error);
+    }
+  }
+};
+
+export const updateRoutineName = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const { name } = req.body;
+
+    const updatedRoutine = await prisma.routine.update({
+      where: {
+        id: req.params.id,
+      },
+      data: {
+        name,
+      },
+    });
+
+    res.json({ success: true, data: updatedRoutine });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      error.message = "Failed to update routine name";
       next(error);
     }
   }
