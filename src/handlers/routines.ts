@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import prisma from "../db";
+import { fromBuffer } from "file-type";
 
 // get routines with folder
 
@@ -44,6 +45,7 @@ export const getRoutine = async (
           include: {
             Exercise: {
               select: {
+                image: true,
                 name: true,
               },
             },
@@ -53,6 +55,7 @@ export const getRoutine = async (
           include: {
             Custom_Exercise: {
               select: {
+                image: true,
                 name: true,
               },
             },
@@ -68,7 +71,65 @@ export const getRoutine = async (
       },
     });
 
-    res.json({ success: true, data: routine });
+    if (!routine) {
+      res.status(404).json({ success: false, message: "Routine not found" });
+      return;
+    }
+
+    const routineWithBase64 = async () => {
+      const routineExercises = await Promise.all(
+        routine.Routine_Exercise.map(async (exercise) => {
+          if (exercise.Exercise.image) {
+            const buffer = exercise.Exercise.image;
+            const type = await fromBuffer(buffer);
+
+            if (type) {
+              const imageBase64 = `data:${type.mime};base64,${buffer.toString(
+                "base64",
+              )}`;
+              return {
+                ...exercise,
+                Exercise: { ...exercise.Exercise, image: imageBase64 },
+              };
+            }
+          }
+          return exercise;
+        }),
+      );
+
+      const routineCustomExercises = await Promise.all(
+        routine.Routine_Custom_Exercise.map(async (exercise) => {
+          if (exercise.Custom_Exercise.image) {
+            const buffer = exercise.Custom_Exercise.image;
+            const type = await fromBuffer(buffer);
+
+            if (type) {
+              const imageBase64 = `data:${type.mime};base64,${buffer.toString(
+                "base64",
+              )}`;
+              return {
+                ...exercise,
+                Custom_Exercise: {
+                  ...exercise.Custom_Exercise,
+                  image: imageBase64,
+                },
+              };
+            }
+          }
+          return exercise;
+        }),
+      );
+
+      return {
+        ...routine,
+        Routine_Exercise: routineExercises,
+        Routine_Custom_Exercise: routineCustomExercises,
+      };
+    };
+
+    routineWithBase64().then((result) => {
+      res.json({ success: true, data: result });
+    });
   } catch (error: unknown) {
     if (error instanceof Error) {
       error.message = "Failed to get routine";
