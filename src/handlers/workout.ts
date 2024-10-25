@@ -108,6 +108,166 @@ export const getWorkouts = async (
   }
 };
 
+export const getWorkout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const workout = await prisma.workout.findUnique({
+      where: {
+        id: req.params.id,
+      },
+      include: {
+        Workout_Exercise: {
+          include: {
+            Exercise: true,
+          },
+        },
+        Workout_Custom_Exercise: {
+          include: {
+            Custom_Exercise: true,
+          },
+        },
+        Workout_Sets: {
+          include: {
+            Personal_Record: true,
+          },
+        },
+        belongsTo: { select: { id: true } },
+      },
+    });
+
+    if (!workout) {
+      res.json({ success: false, data: "Workout not found" });
+      return;
+    }
+
+    const customExercisesWithBase64 = await Promise.all(
+      workout.Workout_Custom_Exercise.map(async (customExercise) => {
+        if (customExercise.Custom_Exercise.image) {
+          const buffer = customExercise.Custom_Exercise.image;
+          const type = await fromBuffer(buffer);
+
+          if (type) {
+            const imageBase64 = `data:${type.mime};base64,${buffer.toString(
+              "base64",
+            )}`;
+            return {
+              ...customExercise,
+              Custom_Exercise: {
+                ...customExercise.Custom_Exercise,
+                image: imageBase64,
+              },
+            };
+          }
+        }
+        return customExercise;
+      }),
+    );
+
+    const exercisesWithBase64 = await Promise.all(
+      workout.Workout_Exercise.map(async (exercise) => {
+        if (exercise.Exercise.image) {
+          const buffer = exercise.Exercise.image;
+          const type = await fromBuffer(buffer);
+
+          if (type) {
+            const imageBase64 = `data:${type.mime};base64,${buffer.toString(
+              "base64",
+            )}`;
+            return {
+              ...exercise,
+              Exercise: {
+                ...exercise.Exercise,
+                image: imageBase64,
+              },
+            };
+          }
+        }
+        return exercise;
+      }),
+    );
+
+    res.json({
+      success: true,
+      data: {
+        ...workout,
+        Workout_Custom_Exercise: customExercisesWithBase64,
+        Workout_Exercise: exercisesWithBase64,
+      },
+    });
+  } catch (error: unknown) {
+    const customError = error as Error & { code: string };
+    if (customError instanceof Error) {
+      if (customError.code === "P2025") {
+        customError.message = "Workout not found";
+        customError.name = "inputError";
+      } else {
+        customError.message = "Error retrieving workout";
+      }
+      next(customError);
+    }
+  }
+};
+
+export const getInProgressWorkout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const workout = await prisma.folder.findFirst({
+      where: {
+        user_id: req.user!.id,
+        Routine: {
+          some: {
+            Workout: {
+              some: {
+                status: "IN_PROGRESS",
+              },
+            },
+          },
+        },
+      },
+      include: {
+        Routine: {
+          include: {
+            Workout: {
+              where: {
+                status: "IN_PROGRESS",
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!workout) {
+      res.json({ success: false, data: "Workout not found" });
+      return;
+    }
+
+    res.json({
+      success: true,
+      data: {
+        Workout_ID: workout.Routine[0]?.Workout[0]?.id ?? undefined,
+        Routine_ID: workout.Routine[0]?.id ?? undefined,
+      },
+    });
+  } catch (error: unknown) {
+    const customError = error as Error & { code: string };
+    if (customError instanceof Error) {
+      if (customError.code === "P2025") {
+        customError.message = "Workout not found";
+        customError.name = "inputError";
+      }
+      customError.message = "Error retrieving workout";
+      next(customError);
+    }
+  }
+};
+
 export const deleteWorkout = async (
   req: Request,
   res: Response,

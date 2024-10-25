@@ -72,7 +72,7 @@ export const getRoutine = async (
     });
 
     if (!routine) {
-      res.status(404).json({ success: false, message: "Routine not found" });
+      res.json({ success: false, message: "Routine not found" });
       return;
     }
 

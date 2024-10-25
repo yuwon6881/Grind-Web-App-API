@@ -34,7 +34,12 @@ import {
   updateRoutineName,
 } from "./handlers/routines";
 import { createRoutine, updateFolderRoutine } from "./handlers/folder_routines";
-import { deleteWorkout, getWorkouts } from "./handlers/workout";
+import {
+  deleteWorkout,
+  getInProgressWorkout,
+  getWorkout,
+  getWorkouts,
+} from "./handlers/workout";
 import {
   createRoutineWorkouts,
   getRoutineWorkouts,
@@ -160,7 +165,8 @@ router.post(
 
 // workout
 router.get("/workouts", getWorkouts);
-// router.put("/workout/:id", () => {});
+router.get("/workout/:id", getWorkout);
+router.get("/workoutInProgress", getInProgressWorkout);
 router.delete("/workout/:id", deleteWorkout);
 
 // routine_workout
