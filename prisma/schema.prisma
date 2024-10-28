@@ -118,37 +118,55 @@ model Workout {
 }
 
 model Workout_Custom_Exercise {
-  workout_id         String
-  custom_exercise_id String
-  workout_uuid       String
-  index              Int             @default(0)
-  rest_timer         Float?
-  note               String?
-  Workout            Workout         @relation(fields: [workout_id], references: [id], onDelete: Cascade)
-  Custom_Exercise    Custom_Exercise @relation(fields: [custom_exercise_id], references: [id], onDelete: Cascade)
+  workout_id                     String
+  custom_exercise_id             String
+  workout_uuid                   String                          @unique
+  index                          Int                             @default(0)
+  rest_timer                     Float?
+  note                           String?
+  Workout                        Workout                         @relation(fields: [workout_id], references: [id], onDelete: Cascade)
+  Custom_Exercise                Custom_Exercise                 @relation(fields: [custom_exercise_id], references: [id], onDelete: Cascade)
+  WorkoutSuperSet_CustomExercise WorkoutSuperset_CustomExercise?
 
   @@id([workout_id, custom_exercise_id, workout_uuid])
 }
 
 model Workout_Exercise {
-  workout_id   String
-  exercise_id  String
-  workout_uuid String
-  index        Int      @default(0)
-  rest_timer   Float?
-  note         String?
-  Workout      Workout  @relation(fields: [workout_id], references: [id], onDelete: Cascade)
-  Exercise     Exercise @relation(fields: [exercise_id], references: [id], onDelete: Cascade)
+  workout_id               String
+  exercise_id              String
+  workout_uuid             String                    @unique
+  index                    Int                       @default(0)
+  rest_timer               Float?
+  note                     String?
+  Workout                  Workout                   @relation(fields: [workout_id], references: [id], onDelete: Cascade)
+  Exercise                 Exercise                  @relation(fields: [exercise_id], references: [id], onDelete: Cascade)
+  WorkoutSuperSet_Exercise WorkoutSuperset_Exercise?
 
   @@id([workout_id, exercise_id, workout_uuid])
 }
 
 model Workout_Superset {
-  id              String            @id @default(uuid())
-  workout_id      String
-  Exercises       Exercise[]
-  Custom_Exercise Custom_Exercise[]
-  belongsTo       Workout           @relation(fields: [workout_id], references: [id], onDelete: Cascade)
+  id                             String                           @id @default(uuid())
+  workout_id                     String
+  WorkoutSuperset_Exercise       WorkoutSuperset_Exercise[]
+  WorkoutSuperset_CustomExercise WorkoutSuperset_CustomExercise[]
+  belongsTo                      Workout                          @relation(fields: [workout_id], references: [id], onDelete: Cascade)
+}
+
+model WorkoutSuperset_Exercise {
+  id               String            @id @default(uuid())
+  supersets_id     String
+  workout_uuid     String            @unique
+  Workout_Exercise Workout_Exercise? @relation(fields: [workout_uuid], references: [workout_uuid], onDelete: Cascade)
+  belongsTo        Workout_Superset  @relation(fields: [supersets_id], references: [id], onDelete: Cascade)
+}
+
+model WorkoutSuperset_CustomExercise {
+  id                      String                   @id @default(uuid())
+  supersets_id            String
+  workout_uuid            String                   @unique
+  Workout_Custom_Exercise Workout_Custom_Exercise? @relation(fields: [workout_uuid], references: [workout_uuid], onDelete: Cascade)
+  belongsTo               Workout_Superset         @relation(fields: [supersets_id], references: [id], onDelete: Cascade)
 }
 
 model Workout_Sets {
@@ -195,7 +213,6 @@ model Custom_Exercise {
   Routine_Custom_Exercise       Routine_Custom_Exercise[]
   Routine_Set                   Routine_Set[]
   Workout_Custom_Exercise       Workout_Custom_Exercise[]
-  Workout_Superset              Workout_Superset[]
   Workout_Sets                  Workout_Sets[]
 }
 
@@ -208,7 +225,6 @@ model Exercise {
   Routine_Exercise Routine_Exercise[]
   Routine_Set      Routine_Set[]
   Workout_Exercise Workout_Exercise[]
-  Workout_Superset Workout_Superset[]
   Workout_Sets     Workout_Sets[]
 }
 

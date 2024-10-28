@@ -39,6 +39,7 @@ import {
   getInProgressWorkout,
   getWorkout,
   getWorkouts,
+  updateWorkout,
 } from "./handlers/workout";
 import {
   createRoutineWorkouts,
@@ -79,6 +80,10 @@ import {
   createRoutineSuperset,
   getRoutineSupersets,
 } from "./handlers/routine_superset";
+import {
+  createWorkoutSuperset,
+  getWorkoutSupersets,
+} from "./handlers/workout_superset";
 
 const upload = multer();
 const router = Router();
@@ -166,6 +171,7 @@ router.post(
 // workout
 router.get("/workouts", getWorkouts);
 router.get("/workout/:id", getWorkout);
+router.put("/workout/:id", updateWorkout);
 router.get("/workoutInProgress", getInProgressWorkout);
 router.delete("/workout/:id", deleteWorkout);
 
@@ -176,6 +182,10 @@ router.post("/routine/:id/workout", createRoutineWorkouts);
 // routine_superset
 router.get("/routine/:id/superset", getRoutineSupersets);
 router.post("/routine/:id/superset", createRoutineSuperset);
+
+//workout_superset
+router.get("/workout/:id/superset", getWorkoutSupersets);
+router.post("/workout/:id/superset", createWorkoutSuperset);
 
 router.use(errorHandler);
 

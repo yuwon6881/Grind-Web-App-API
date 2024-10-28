@@ -112,6 +112,7 @@ export const createWorkoutExercise = async (
               data: exercise.sets.map((set) => ({
                 ...set,
                 workout_id: req.params.id,
+                exercise_id: exercise.exercise_id,
               })),
             });
           } else {
@@ -126,7 +127,7 @@ export const createWorkoutExercise = async (
               data: exercise.sets.map((set) => ({
                 ...set,
                 workout_id: req.params.id,
-                custom_exercise_id: exercise.exercise_id,
+                custom_exercise_id: exercise.custom_exercise_id,
               })),
             });
           }
