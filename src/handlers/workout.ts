@@ -134,6 +134,12 @@ export const getWorkout = async (
             Personal_Record: true,
           },
         },
+        Workout_Superset: {
+          include: {
+            WorkoutSuperset_Exercise: true,
+            WorkoutSuperset_CustomExercise: true,
+          },
+        },
         belongsTo: { select: { id: true } },
       },
     });
