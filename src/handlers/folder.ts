@@ -13,7 +13,11 @@ export const getFolders = async (
         id: req.user!.id,
       },
       include: {
-        Folder: true,
+        Folder: {
+          where: {
+            deletedAt: null,
+          },
+        },
       },
     });
 
@@ -80,12 +84,34 @@ export const deleteFolder = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const deleted = await prisma.folder.delete({
+    const defaultFolder = await prisma.folder.findFirst({
+      where: {
+        user_id: req.user!.id,
+        name: "SystemDefault",
+        index: -1,
+      },
+    });
+
+    const deleted = await prisma.folder.update({
       where: {
         id: req.params.id,
         user_id: req.user!.id,
       },
+      data: {
+        deletedAt: new Date(),
+      },
     });
+
+    //Move all routines in the deleted folder to the default folder
+    await prisma.routine.updateMany({
+      where: {
+        folder_id: req.params.id,
+      },
+      data: {
+        folder_id: defaultFolder!.id,
+      },
+    });
+
     res.json({ success: true, data: deleted });
   } catch (error: unknown) {
     const customError = error as Error & { code?: string };

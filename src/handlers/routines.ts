@@ -15,7 +15,11 @@ export const getRoutines = async (
         user_id: req.user!.id,
       },
       include: {
-        Routine: true,
+        Routine: {
+          where: {
+            deletedAt: null,
+          },
+        },
       },
     });
 
@@ -39,6 +43,7 @@ export const getRoutine = async (
     const routine = await prisma.routine.findUnique({
       where: {
         id: req.params.id,
+        deletedAt: null,
       },
       include: {
         Routine_Exercise: {
@@ -145,9 +150,12 @@ export const deleteRoutine = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const routine = await prisma.routine.delete({
+    const routine = await prisma.routine.update({
       where: {
         id: req.params.id,
+      },
+      data: {
+        deletedAt: new Date(),
       },
     });
     res.json({ success: true, data: routine });

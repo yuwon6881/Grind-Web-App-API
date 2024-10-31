@@ -87,6 +87,7 @@ model Folder {
   user_id   String
   belongsTo User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
   Routine   Routine[]
+  deletedAt DateTime?
 }
 
 model Routine {
@@ -100,6 +101,7 @@ model Routine {
   Routine_Exercise        Routine_Exercise[]
   Routine_Superset        Routine_Superset[]
   Routine_Set             Routine_Set[]
+  deletedAt               DateTime?
 }
 
 model Workout {
@@ -109,8 +111,8 @@ model Workout {
   name                    String
   duration                Float?
   status                  status                    @default(IN_PROGRESS)
-  routine_id              String
-  belongsTo               Routine                   @relation(fields: [routine_id], references: [id], onDelete: Cascade)
+  routine_id              String?
+  belongsTo               Routine?                  @relation(fields: [routine_id], references: [id], onDelete: SetNull)
   Workout_Custom_Exercise Workout_Custom_Exercise[]
   Workout_Exercise        Workout_Exercise[]
   Workout_Superset        Workout_Superset[]
