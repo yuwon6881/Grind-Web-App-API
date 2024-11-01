@@ -84,6 +84,11 @@ import {
   createWorkoutSuperset,
   getWorkoutSupersets,
 } from "./handlers/workout_superset";
+import {
+  createPersonalRecord,
+  getPersonalRecords,
+  getPersonalRecordSet,
+} from "./handlers/personal_record";
 
 const upload = multer();
 const router = Router();
@@ -186,6 +191,11 @@ router.post("/routine/:id/superset", createRoutineSuperset);
 //workout_superset
 router.get("/workout/:id/superset", getWorkoutSupersets);
 router.post("/workout/:id/superset", createWorkoutSuperset);
+
+// personal_records
+router.get("/personal_records", getPersonalRecords);
+router.get("/personal_record_set/:id", getPersonalRecordSet);
+router.post("/personal_record/:workout_id", createPersonalRecord);
 
 router.use(errorHandler);
 

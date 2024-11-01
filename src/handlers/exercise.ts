@@ -59,39 +59,160 @@ export const getExercise = async (
 ): Promise<void> => {
   try {
     let exercisesWithBase64;
-    const exercise = await prisma.exercise.findUnique({
+    const workoutQuery = await prisma.folder.findMany({
       where: {
-        id: req.params.id,
+        user_id: req.user?.id,
       },
       select: {
-        id: true,
-        name: true,
-        image: true,
-        exerciseType: true,
-        Workout_Sets: {
+        Routine: {
           select: {
-            weight: true,
-            reps: true,
-            volume: true,
             Workout: {
               select: {
-                start_date: true,
-              },
-            },
-          },
-        },
-        Exercise_Muscle: {
-          select: {
-            muscleType: true,
-            Muscle: {
-              select: {
-                name: true,
+                id: true,
               },
             },
           },
         },
       },
     });
+
+    const workout_IDs = workoutQuery.flatMap((folder) =>
+      folder.Routine.flatMap((routine) =>
+        routine.Workout.map((workout) => workout.id),
+      ),
+    );
+
+    const exerciseQuery = await prisma.folder.findMany({
+      where: {
+        user_id: req.user?.id,
+      },
+      select: {
+        Routine: {
+          select: {
+            Workout: {
+              select: {
+                Workout_Exercise: {
+                  select: {
+                    Exercise: {
+                      select: {
+                        id: true,
+                        name: true,
+                        image: true,
+                        exerciseType: true,
+                        Workout_Sets: {
+                          select: {
+                            weight: true,
+                            reps: true,
+                            volume: true,
+                            Workout: {
+                              select: {
+                                id: true,
+                                start_date: true,
+                              },
+                            },
+                          },
+                        },
+                        Exercise_Muscle: {
+                          select: {
+                            muscleType: true,
+                            Muscle: {
+                              select: {
+                                name: true,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const exercises = exerciseQuery.flatMap((folder) =>
+      folder.Routine.flatMap((routine) =>
+        routine.Workout.flatMap((workout) =>
+          workout.Workout_Exercise.map((workoutExercise) => {
+            const exercise = workoutExercise.Exercise;
+            exercise.Workout_Sets = exercise.Workout_Sets.filter((set) => {
+              return workout_IDs.includes(set.Workout.id);
+            });
+            return exercise;
+          }),
+        ),
+      ),
+    );
+
+    const exercise = exercises.length > 0 ? exercises[0] : null;
+
+    if (!exercise) {
+      const exerciseNoData = await prisma.exercise.findUnique({
+        where: {
+          id: req.params.id,
+        },
+        select: {
+          id: true,
+          name: true,
+          image: true,
+          exerciseType: true,
+          Workout_Sets: {
+            select: {
+              weight: true,
+              reps: true,
+              volume: true,
+              Workout: {
+                select: {
+                  start_date: true,
+                },
+              },
+            },
+          },
+          Exercise_Muscle: {
+            select: {
+              muscleType: true,
+              Muscle: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!exerciseNoData) {
+        const error = new Error();
+        error.message = "Exercise not found";
+        error.name = "inputError";
+        throw error;
+      }
+
+      exercisesWithBase64 = { ...exerciseNoData };
+
+      if (exerciseNoData.image) {
+        const buffer = exerciseNoData.image;
+        const type = await fromBuffer(buffer);
+        if (type) {
+          const imageBase64 = `data:${type.mime};base64,${buffer.toString(
+            "base64",
+          )}`;
+          exercisesWithBase64 = { ...exerciseNoData, image: imageBase64 };
+        }
+      } else {
+        exercisesWithBase64 = { ...exerciseNoData };
+      }
+
+      res.json({
+        success: true,
+        data: exercisesWithBase64,
+        noData: true,
+      });
+      return;
+    }
     if (!exercise) {
       const error = new Error();
       error.message = "Exercise not found";
@@ -121,7 +242,7 @@ export const getExercise = async (
       });
     }
 
-    res.json({ success: true, data: exercisesWithBase64 });
+    res.json({ success: true, data: exercisesWithBase64, noData: false });
   } catch (error: unknown) {
     if (error instanceof Error) {
       error.message = error.message || "Failed to get exercise";

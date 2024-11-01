@@ -68,6 +68,7 @@ model User {
   Custom_Muscle   Custom_Muscle[]
   Custom_Exercise Custom_Exercise[]
   Folder          Folder[]
+  Personal_Record Personal_Record[]
 }
 
 model Settings {
@@ -190,9 +191,15 @@ model Workout_Sets {
 }
 
 model Personal_Record {
-  id             String       @id @default(uuid())
-  workout_set_id String       @unique
-  belongsTo      Workout_Sets @relation(fields: [workout_set_id], references: [id], onDelete: Cascade)
+  id                 String           @id @default(uuid())
+  user_id            String
+  exercise_id        String?
+  custom_exercise_id String?
+  workout_set_id     String           @unique
+  belongsTo          Workout_Sets     @relation(fields: [workout_set_id], references: [id], onDelete: Cascade)
+  User               User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  Exercise           Exercise?        @relation(fields: [exercise_id], references: [id], onDelete: Cascade)
+  CustomExercise     Custom_Exercise? @relation(fields: [custom_exercise_id], references: [id], onDelete: Cascade)
 }
 
 model Custom_Muscle {
@@ -216,6 +223,7 @@ model Custom_Exercise {
   Routine_Set                   Routine_Set[]
   Workout_Custom_Exercise       Workout_Custom_Exercise[]
   Workout_Sets                  Workout_Sets[]
+  Personal_Record               Personal_Record[]
 }
 
 model Exercise {
@@ -228,6 +236,7 @@ model Exercise {
   Routine_Set      Routine_Set[]
   Workout_Exercise Workout_Exercise[]
   Workout_Sets     Workout_Sets[]
+  Personal_Record  Personal_Record[]
 }
 
 model Routine_Custom_Exercise {
