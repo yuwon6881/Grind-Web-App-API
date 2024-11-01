@@ -48,8 +48,11 @@ export const createMuscle = async (
   next: NextFunction,
 ) => {
   try {
-    const muscle = await prisma.muscle.create({
-      data: req.body,
+    const muscle = await prisma.custom_Muscle.create({
+      data: {
+        name: req.body.name,
+        user_id: req.user?.id,
+      },
     });
     res.json({ success: true, data: muscle });
   } catch (error: unknown) {
