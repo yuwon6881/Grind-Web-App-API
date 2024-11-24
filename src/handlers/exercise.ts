@@ -138,11 +138,14 @@ export const getExercise = async (
         routine.Workout.flatMap((workout) =>
           workout.Workout_Exercise.map((workoutExercise) => {
             const exercise = workoutExercise.Exercise;
-            exercise.Workout_Sets = exercise.Workout_Sets.filter((set) => {
-              return workout_IDs.includes(set.Workout.id);
-            });
-            return exercise;
-          }),
+            if (exercise.id === req.params.id) {
+              exercise.Workout_Sets = exercise.Workout_Sets.filter((set) => {
+                return workout_IDs.includes(set.Workout.id);
+              });
+              return exercise;
+            }
+            return null;
+          }).filter(exercise => exercise !== null),
         ),
       ),
     );
