@@ -158,6 +158,7 @@ export const deleteRoutine = async (
         deletedAt: new Date(),
       },
     });
+
     res.json({ success: true, data: routine });
   } catch (error: unknown) {
     const customError = error as Error & { code: string };

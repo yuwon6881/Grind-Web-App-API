@@ -1,10 +1,5 @@
 import { prismaMock } from "../../singleton";
-import {
-  getExercises,
-  getExercise,
-  createExercise,
-  deleteExercise,
-} from "../exercise";
+import { getExercises, createExercise, deleteExercise } from "../exercise";
 import { request, response, next } from "./mocks";
 import { exercise_muscle, exercises } from "./mockData";
 import { muscleType } from "@prisma/client";
@@ -30,34 +25,6 @@ describe("getExercises", () => {
       expect(next).toHaveBeenCalledWith(
         expect.objectContaining({
           message: "Failed to get exercises",
-        }),
-      );
-    });
-  });
-});
-
-describe("getExercise", () => {
-  describe("when request is valid", () => {
-    it("should return an exercise", async () => {
-      request.params = { id: "1" };
-      prismaMock.exercise.findUnique.mockResolvedValue(exercises[0]);
-      await getExercise(request, response, next);
-      expect(response.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          data: exercises[0],
-        }),
-      );
-    });
-  });
-
-  describe("when request is invalid", () => {
-    it("should return error", async () => {
-      request.params = { id: "1" };
-      prismaMock.exercise.findUnique.mockRejectedValue(new Error());
-      await getExercise(request, response, next);
-      expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({
-          message: "Failed to get exercise",
         }),
       );
     });

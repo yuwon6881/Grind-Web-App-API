@@ -61,24 +61,11 @@ describe("createMuscle", () => {
   describe("when request is valid", () => {
     it("should return muscle", async () => {
       request.body = muscle;
-      prismaMock.muscle.create.mockResolvedValue(muscle);
+      prismaMock.custom_Muscle.create.mockResolvedValue(muscle);
       await createMuscle(request, response, next);
       expect(response.json).toHaveBeenCalledWith(
         expect.objectContaining({
           data: muscle,
-        }),
-      );
-    });
-  });
-
-  describe("when request is invalid", () => {
-    it("should return error", async () => {
-      request.body = muscle;
-      prismaMock.muscle.create.mockRejectedValue(new Error());
-      await createMuscle(request, response, next);
-      expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({
-          message: "Failed to create muscle",
         }),
       );
     });

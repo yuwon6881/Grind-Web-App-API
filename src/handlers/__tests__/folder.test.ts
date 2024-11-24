@@ -73,7 +73,8 @@ describe("deleteFolder", () => {
       request.params = {
         id: folders[0].id,
       };
-      prismaMock.folder.delete.mockResolvedValue(folders[0]);
+      prismaMock.folder.findFirst.mockResolvedValue(folders[0]);
+      prismaMock.folder.update.mockResolvedValue(folders[0]);
       await deleteFolder(request, response, next);
       expect(response.json).toHaveBeenCalledWith(
         expect.objectContaining({

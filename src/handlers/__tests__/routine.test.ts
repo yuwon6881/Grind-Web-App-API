@@ -32,7 +32,7 @@ describe("deleteRoutine", () => {
   describe("when request is valid", () => {
     it("should return a routine", async () => {
       request.params = { id: "1" };
-      prismaMock.routine.delete.mockResolvedValue(routine);
+      prismaMock.routine.update.mockResolvedValue(routine);
       await deleteRoutine(request, response, next);
       expect(response.json).toHaveBeenCalledWith(
         expect.objectContaining({ data: routine }),
@@ -42,7 +42,7 @@ describe("deleteRoutine", () => {
   describe("when request is invalid", () => {
     it("should return error", async () => {
       request.params = { id: "1" };
-      prismaMock.routine.delete.mockRejectedValue(new Error());
+      prismaMock.routine.update.mockRejectedValue(new Error());
       await deleteRoutine(request, response, next);
       expect(next).toHaveBeenCalledWith(
         expect.objectContaining({

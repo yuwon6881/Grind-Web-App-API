@@ -17,7 +17,6 @@ import {
   Exercise_Muscle,
   muscleType,
   Custom_Exercise_Muscle,
-  Muscle,
   Custom_Muscle,
 } from "@prisma/client";
 
@@ -65,12 +64,14 @@ export const folders: Folder[] = [
     name: "folder1",
     index: 1,
     user_id: "1",
+    deletedAt: null,
   },
   {
     id: "2",
     name: "folder2",
     index: 2,
     user_id: "1",
+    deletedAt: null,
   },
 ];
 
@@ -79,6 +80,7 @@ export const folder: Folder = {
   name: "SystemDefault",
   index: -1,
   user_id: "1",
+  deletedAt: null,
 };
 
 export const user: User = {
@@ -101,6 +103,7 @@ export const routine: Routine = {
   name: "Routine1",
   index: 0,
   folder_id: "1",
+  deletedAt: null,
 };
 
 export const folders_routines = {
@@ -155,9 +158,10 @@ export const custom_exercise: Custom_Exercise = {
   user_id: user.id,
 };
 
-export const muscle: Muscle = {
+export const muscle = {
   id: "1",
   name: "muscle1",
+  user_id: "1",
 };
 
 export const customMuscle: Custom_Muscle = {
